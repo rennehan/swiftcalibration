@@ -1,0 +1,4 @@
+Interpolation tables to compute the star particles' dust-free
+rest-frame photometry in the GAMA u,g,r,i,z,Y,H,J,K bands.  The tables
+were constructed from the model of Trayford et al. (2015), MNRAS, 452,
+3, p.2879.
