@@ -66,7 +66,7 @@ def gen_gsmf(SNAPLIST, SNAPDIR, SIM='doug_s18n128'):
     logM  = np.log10(stellar_masses)        #Take logarithm
     dlogM = 0.5                             #bin width in dex
 #    bins = np.arange(logM.min(), logM.max(), dlogM)
-    bins = np.arange(8.0, 13.5, dlogM)
+    bins = np.arange(8.0, 13.5+dlogM, dlogM)
     nbins = len(bins)
 #    nbins = 10                              #Number of bins to divide data into
     Phi,edg = np.histogram(logM,bins=bins) #Unnormalized histogram and bin edges
