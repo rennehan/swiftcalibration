@@ -26,15 +26,16 @@ for i in range(1,len(args.myArgs)):
 #SNAPLIST = [71,75,83,90,95,100,110,120,130,140]
 #SNAPLIST = [36,51,62,78,105,151,20,25,30,40,45,56,66,71,75,83,90,95,100,110,120,130,140]
 #SNAPLIST = list(range(0,16))
-SNAPLIST = list(range(0,16))
-#SNAPLIST = [15]
+
+#SNAPLIST = list(range(0,16))
+SNAPLIST = [15]
 
 #SNAPLIST = list(range(0,170))
 print (SNAPLIST)
 #SNAPLIST = [0,1]
 #SIM = 'Kobayashi_NoDust_N128L12_test'
 
-def reduce(SNAPLIST, SNAPDIR, SIM='doug_s18n128', FOF6DLOC='Fof6D', NPROC=16):
+def reduce(SNAPLIST, SNAPDIR, SIM='simba_s12.5n128', FOF6DLOC='Fof6D', NPROC=16):
 #  if SIM[0]=="M":
 #      SNAPDIR ='/scratch/b/babul/rennehan/cosmo/256/25Mpc/Simba/'+str(SIM)+'/'
 #  else:
