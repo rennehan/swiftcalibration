@@ -14,25 +14,36 @@ import astropy.units as u
 
 ##########################################################################################################################
 #### This function generates galaxy stellar mass functions (GSMF) from ceasar files for the given simulation in a given directory.
-#### Call it using python gen_gsmf.py SNAPDIR MODEL1 MODEL2...
+#### Call it using python gen_gsmf.py SNAPDIR MODEL1 MODEL2...     XX
+#### Call it using python gen_gsmf.py MODELDIR SIMDIR SIM
 #### Based on Renier Hough's "Create_caesarfiles.py"
 ##########################################################################################################################
 
 parser = argparse.ArgumentParser()
-parser.add_argument('myArgs', nargs='*')
+#parser.add_argument('myArgs', nargs='*')
+#parser.add_argument('myArgs', nargs=3)
+parser.add_argument('--modeldir')
+parser.add_argument('--simdir')
+parser.add_argument('--sim', type=str)
 args = parser.parse_args()
-SNAPDIR = args.myArgs[0]
+#MODELDIR = args.myArgs[0]
 #NBINS = int(args.myArgs[1])
-SIM = []
-for i in range(1,len(args.myArgs)):
-   SIM.append(args.myArgs[i])
+#SIM = []
+#for i in range(1,len(args.myArgs)):
+#    SIM.append(args.myArgs[i])
+#SIMDIR = args.myArgs[1]
+#SIM = args.myArgs[2]
+
+MODELDIR = args.modeldir
+SIMDIR = args.simdir
+SIM = args.sim
 
 #SNAPLIST = list(range(0,16))
 SNAPLIST = [15]
 
 print (SNAPLIST)
 
-def gen_gsmf(SNAPLIST, SNAPDIR, SIM='simba_s12.5n128'):
+def gen_observable(SNAPLIST, SNAPDIR, SIM):
   print (SNAPDIR)
   '''
   SNAPLIST: list of the snapshot numbers
@@ -50,7 +61,7 @@ def gen_gsmf(SNAPLIST, SNAPDIR, SIM='simba_s12.5n128'):
       continue
     
     CAESARFILE = os.path.join(SNAPDIR, '%s_caesar_%04d.hdf5' % (SIM,j))
-    GSMFFILE = os.path.join(SNAPDIR, '%s_gsmf_%04d.txt' % (SIM,j))
+#    GSMFFILE = os.path.join(SNAPDIR, '%s_gsmf_%04d.txt' % (SIM,j))
 
     ds = yt.load(SNAP)
     Vcom = ds.domain_width.in_units("Mpccm").prod()  # Comoving box volume in Mpc^3
@@ -94,10 +105,10 @@ def gen_gsmf(SNAPLIST, SNAPDIR, SIM='simba_s12.5n128'):
 
 
     # Save to text file
-    if os.path.exists(GSMFFILE):
-       os.remove(GSMFFILE)
+#    if os.path.exists(GSMFFILE):
+#       os.remove(GSMFFILE)
     
-    np.savetxt(GSMFFILE, np.column_stack((10**logM_ax, Phi, Phi_err)), header='M/Msun\tPhi/cMpc^-3\tPhi_err/cMpc^-3')
+#    np.savetxt(GSMFFILE, np.column_stack((10**logM_ax, Phi, Phi_err)), header='M/Msun\tPhi/cMpc^-3\tPhi_err/cMpc^-3')
     
     
     
@@ -150,5 +161,8 @@ def gen_gsmf(SNAPLIST, SNAPDIR, SIM='simba_s12.5n128'):
 
 
 for i in range(0, len(SIM)):
-#    gen_gsmf(SNAPLIST, SNAPDIR, SIM=SIM[i])    
-    gen_gsmf(SNAPLIST, os.path.join(SNAPDIR, SIM[i]))
+#    gen_observable(SNAPLIST, SNAPDIR, SIM=SIM[i])    
+    gen_observable(SNAPLIST, os.path.join(MODELDIR, SIMDIR[i]), SIM)
+    
+    print()
+    print("DONE")
