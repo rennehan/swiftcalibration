@@ -85,9 +85,11 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         cosmology = FlatLambdaCDM(name=r'Flat $\Lambda$CDM', H0=h0*100. * u.km / u.s / u.Mpc, Om0=omega_matter)
 
 
+        
         # Dictionary to save all observables in
         save_data = {}
 
+        
 
         ## Simulation data for observable
         gal_stellar_masses = np.array([gal.masses['stellar'] for gal in obj.galaxies])    
@@ -168,6 +170,12 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
                             'xerr':None,
                             'y':gal_bh_masses_fit * unyt.Solar_Mass,
                             'yerr':err_gal_bh_masses_fit * unyt.Solar_Mass}
+        save_data['log_fit_sparse'] = {'x':log_gal_stellar_masses_fit * unyt.Solar_Mass,
+                            'xerr':None,
+                            'y':log_gal_bh_masses_fit * unyt.Solar_Mass,
+                            'yerr':(10**log_gal_bh_masses_fit - 10**(log_gal_bh_masses_fit - log_err_gal_bh_masses_fit), 
+                                    -10**log_gal_bh_masses_fit + 10**(log_gal_bh_masses_fit + log_err_gal_bh_masses_fit)) *
+                                       unyt.Solar_Mass}
 
 
 
@@ -217,13 +225,16 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         save_data['binned_log_mean'] = {'x':10**log_gal_stellar_masses_bins_ax * unyt.Solar_Mass,
                                     'xerr':None,
                                     'y':10**log_gal_bh_masses_bin_means * unyt.Solar_Mass,
-                                    'yerr':10**log_gal_bh_masses_bin_stds * unyt.Solar_Mass}
-                                    #'yerr':(10**log_gal_bh_masses_bin_means - 10**(log_gal_bh_masses_bin_means - log_gal_bh_masses_bin_stds)) * unyt.Solar_Mass}
+                                    'yerr':(10**log_gal_bh_masses_bin_means - 
+                                            10**(log_gal_bh_masses_bin_means - log_gal_bh_masses_bin_stds), 
+                                            -10**log_gal_bh_masses_bin_means + 
+                                            10**(log_gal_bh_masses_bin_means + log_gal_bh_masses_bin_stds)) * unyt.Solar_Mass}
         save_data['binned_log_median'] = {'x':10**log_gal_stellar_masses_bins_ax * unyt.Solar_Mass,
                                       'xerr':None,
                                       'y':10**log_gal_bh_masses_bin_medians * unyt.Solar_Mass,
-                                      'yerr':(10**(log_gal_bh_masses_bin_medians-log_gal_bh_masses_bin_quantiles_lo),
-                                              10**(log_gal_bh_masses_bin_medians+log_gal_bh_masses_bin_quantiles_hi)) * unyt.Solar_Mass}
+                                      'yerr':(10**log_gal_bh_masses_bin_medians - 10**log_gal_bh_masses_bin_quantiles_lo, 
+                                              -10**log_gal_bh_masses_bin_medians + 10**log_gal_bh_masses_bin_quantiles_hi) * 
+                                          unyt.Solar_Mass}
         
 
 
@@ -327,12 +338,18 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         save_data['exact_count_binned_log_mean'] = {'x':10**log_gal_stellar_masses_exact_count_bins_ax * unyt.Solar_Mass,
                                     'xerr':None,
                                     'y':10**log_gal_bh_masses_exact_count_bin_means * unyt.Solar_Mass,
-                                    'yerr':10**log_gal_bh_masses_exact_count_bin_stds * unyt.Solar_Mass}
+                                    'yerr':(10**log_gal_bh_masses_exact_count_bin_means - 
+                                            10**(log_gal_bh_masses_exact_count_bin_means - log_gal_bh_masses_exact_count_bin_stds), 
+                                            -10**log_gal_bh_masses_exact_count_bin_means + 
+                                            10**(log_gal_bh_masses_exact_count_bin_means + log_gal_bh_masses_exact_count_bin_stds)) *
+                                                    unyt.Solar_Mass}
         save_data['exact_count_binned_log_median'] = {'x':10**log_gal_stellar_masses_exact_count_bins_ax * unyt.Solar_Mass,
                                       'xerr':None,
                                       'y':10**log_gal_bh_masses_exact_count_bin_medians * unyt.Solar_Mass,
-                                      'yerr':(10**(log_gal_bh_masses_exact_count_bin_medians-log_gal_bh_masses_exact_count_bin_quantiles_lo),
-                                              10**(log_gal_bh_masses_exact_count_bin_medians+log_gal_bh_masses_exact_count_bin_quantiles_hi)) * 
+                                      'yerr':(10**log_gal_bh_masses_exact_count_bin_medians - 
+                                              10**log_gal_bh_masses_exact_count_bin_quantiles_lo,
+                                              -10**log_gal_bh_masses_exact_count_bin_medians + 
+                                              10**log_gal_bh_masses_exact_count_bin_quantiles_hi) * 
                                                   unyt.Solar_Mass}
 
 
@@ -460,12 +477,18 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         save_data['min_count_binned_log_mean'] = {'x':10**log_gal_stellar_masses_min_count_bins_ax * unyt.Solar_Mass,
                                     'xerr':None,
                                     'y':10**log_gal_bh_masses_min_count_bin_means * unyt.Solar_Mass,
-                                    'yerr':10**log_gal_bh_masses_min_count_bin_stds * unyt.Solar_Mass}
+                                    'yerr':(10**log_gal_bh_masses_min_count_bin_means - 
+                                            10**(log_gal_bh_masses_min_count_bin_means - log_gal_bh_masses_min_count_bin_stds), 
+                                            -10**log_gal_bh_masses_min_count_bin_means + 
+                                            10**(log_gal_bh_masses_min_count_bin_means + log_gal_bh_masses_min_count_bin_stds)) * 
+                                                  unyt.Solar_Mass}
         save_data['min_count_binned_log_median'] = {'x':10**log_gal_stellar_masses_min_count_bins_ax * unyt.Solar_Mass,
                                       'xerr':None,
                                       'y':10**log_gal_bh_masses_min_count_bin_medians * unyt.Solar_Mass,
-                                      'yerr':(10**(log_gal_bh_masses_min_count_bin_medians-log_gal_bh_masses_min_count_bin_quantiles_lo),
-                                              10**(log_gal_bh_masses_min_count_bin_medians+log_gal_bh_masses_min_count_bin_quantiles_hi)) * unyt.Solar_Mass}
+                                      'yerr':(10**log_gal_bh_masses_min_count_bin_medians - 
+                                              10**log_gal_bh_masses_min_count_bin_quantiles_lo,
+                                              -10**log_gal_bh_masses_min_count_bin_medians + 
+                                              10**log_gal_bh_masses_min_count_bin_quantiles_hi) * unyt.Solar_Mass}
 
 
 
@@ -473,61 +496,7 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
 
 
 
-
-
-
-        # Save to text file
-        '''
-        if os.path.exists(OUTFILE):
-           os.remove(OUTFILE)
-
-        np.savetxt(OUTFILE, np.column_stack((gal_stellar_masses, gal_bh_masses)), header='Mstar/Msun\tMbh/Msun')
-        '''
-
-
-
-        # Create and save Velociraptor HDF5 data file
-        '''
-        output_filename = "%s_bhmsm_%04d.hdf5" % (SIM,j)
-        output_directory = SNAPDIR
-
-        if not os.path.exists(output_directory):
-            os.mkdir(output_directory)
-
-        processed = ObservationalData()
-
-        comment = f"h-corrected for SWIFT using cosmology: {cosmology.name}."
-        citation = ""
-        bibcode = ""
-        name = "BHMSM relation from swimba"
-        plot_as = "points"
-        #    redshift = redshift
-        redshift_lower = redshift
-        redshift_upper = redshift
-        h = cosmology.h
-        #print(h)
-
-        Mstar = stellar_masses * unyt.Solar_Mass
-        Mbh = bh_masses * unyt.Solar_Mass
-
-        processed.associate_x(Mstar, scatter=None, comoving=True, description="Galaxy Stellar Mass")
-        processed.associate_y(Mbh, scatter=None, comoving=True, description="Galaxy Black Hole Mass")
-        processed.associate_citation(citation, bibcode)
-        processed.associate_name(name)
-        processed.associate_comment(comment)
-        processed.associate_redshift(redshift, redshift_lower, redshift_upper)
-        processed.associate_plot_as(plot_as)
-        processed.associate_cosmology(cosmology)
-
-        output_path = os.path.join(output_directory, output_filename)
-
-        if os.path.exists(output_path):
-           os.remove(output_path)
-
-        processed.write(filename=output_path)
-        '''    
-
-
+        # Save to HDF5 files
         output_directory = SNAPDIR
 
         if not os.path.exists(output_directory):
