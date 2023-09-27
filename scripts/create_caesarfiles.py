@@ -7,49 +7,34 @@ import argparse
 
 ##########################################################################################################################
 #### This function creates ceasar files from the given simulation in a given directory.
-#### Call it using python create_caesarfiles.py SNAPDIR MODEL1 MODEL2...   XX
-#### Call it using python create_caesarfiles.py MODELDIR SIMDIR SIM
+#### Call it using python create_caesarfiles.py --modeldir=path/to/model --simdir=SIMDIR --sim=SIM
 #### Based on Renier Hough's "Create_caesarfiles.py"
 ##########################################################################################################################
 
 parser = argparse.ArgumentParser()
-#parser.add_argument('myArgs', nargs='*')
-#parser.add_argument('myArgs', nargs=3)
 parser.add_argument('--modeldir')
 parser.add_argument('--simdir')
 parser.add_argument('--sim', type=str)
 args = parser.parse_args()
-#MODELDIR = args.myArgs[0]
-#NBINS = int(args.myArgs[1])
-#SIM = []
-#for i in range(1,len(args.myArgs)):
-#    SIM.append(args.myArgs[i])
-#SIMDIR = args.myArgs[1]
-#SIM = args.myArgs[2]
 
 MODELDIR = args.modeldir
 SIMDIR = args.simdir
 SIM = args.sim
 
 
-#SNAPLIST = list(range(0,16))
-#SNAPLIST = list(range(7,15))
-SNAPLIST = [15]
+#SNAPLIST = list(range(4,16))
+SNAPLIST = list(range(0,16))
+#SNAPLIST = [15]
 
 print (SNAPLIST)
 
 
 def reduce(SNAPLIST, SNAPDIR, SIM, FOF6DLOC='Fof6D', NPROC=16):
-#  if SIM[0]=="M":
-#      SNAPDIR ='/scratch/b/babul/rennehan/cosmo/256/25Mpc/Simba/'+str(SIM)+'/'
-#  else:
-#      SNAPDIR ='/scratch/b/babul/renierht/output_directory/'+str(SIM)+'/' 
     print (SNAPDIR)
     '''
     SNAPLIST: list of the snapshot numbers
     SIM: Sim name, e.g. m50n512, used in snapshot name (assumes Simba naming convention)
     SNAPDIR = Directory where snapshots are located
-    CAESARLOC = Subdirectory to write Caesar catalogs
     FOF6DLOC = Subdirectory to look for / write fof6d files
     '''
     for j in SNAPLIST:
@@ -61,7 +46,6 @@ def reduce(SNAPLIST, SNAPDIR, SIM, FOF6DLOC='Fof6D', NPROC=16):
             continue
 
         CAESARFILE = os.path.join(SNAPDIR, '%s_caesar_%04d.hdf5' % (SIM,j))
-        #CAESARFILE = '/scratch/b/babul/renierht/output_directory/Kobayashi_NoDust_N256L25_Factor/caesar_%03d.hdf5' % (j)
         FOF6DFILE = os.path.join(SNAPDIR, 'Fof6D/fof_%04d.hdf5'%(j))
         HALOIDFILE = os.path.join(SNAPDIR, FOF6DLOC,  'haloid_%04d.hdf5'%(j))
         HALOID = 'fof' # options atm are 'snap' (Halo ID's from snapshot) or 'fof' (yt's 3DFOF)
@@ -95,11 +79,6 @@ def reduce(SNAPLIST, SNAPDIR, SIM, FOF6DLOC='Fof6D', NPROC=16):
         obj.save(CAESARFILE)
 
 
-'''
-for i in range(0, len(SIM)):
-#    reduce(SNAPLIST, SNAPDIR, SIM=SIM[i])    
-    reduce(SNAPLIST, os.path.join(SNAPDIR, SIM[i]))
-'''
 
 reduce(SNAPLIST, os.path.join(MODELDIR, SIMDIR), SIM)
 
@@ -107,5 +86,3 @@ reduce(SNAPLIST, os.path.join(MODELDIR, SIMDIR), SIM)
 print("DONE")
 print()
 print()
-
-#ssp_table_file='/home/rad/caesar/SSP_Chab_EL.hdf5'
