@@ -45,6 +45,18 @@ y_label = r'$\log(\Phi=dn/dlogM_\star\,[\,\mathrm{dex}^{-1}\,\mathrm{cMpc}^{-3}]
 
 
 
+# Set min and max stellar masses for binning
+min_log_gal_stellar_mass = 6
+max_log_gal_stellar_mass = 14
+
+
+## Minimum number of galaxies require in a bin when binning
+minN = 10
+
+## x spacing for binning
+dx = 0.2
+
+
 def gen_observable(SNAPLIST, SNAPDIR, SIM):
     print (SNAPDIR)
     '''
@@ -104,17 +116,14 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         log_stellar_masses_eddington_biased = log_stellar_masses + eddington_bias
         stellar_masses_eddington_biased = 10**log_stellar_masses_eddington_biased
         
-
         
-        # Set min and max stellar masses for binning
-        min_log_gal_stellar_mass = 6
-        max_log_gal_stellar_mass = 14
-    
+        
+        
         
         logM_ax, logPhi, logPhi_total_lo_err, logPhi_total_hi_err, logPhi_total_err, logPhi_total_err_v2 = gen.mass_function_with_error(
-            stellar_masses_eddington_biased, pos_Mpc, boxsize, Vcom, 
-            dlogM=0.2, min_logM=min_log_gal_stellar_mass, max_logM=max_log_gal_stellar_mass, 
-            calc_min_logM=False, calc_max_logM=False)
+            stellar_masses, pos_Mpc, boxsize, Vcom, 
+            dlogM=dx, min_logM=min_log_gal_stellar_mass, max_logM=max_log_gal_stellar_mass, 
+            calc_min_logM=False, calc_max_logM=False, minN=minN)
 
         isfinite = np.isfinite(logPhi)
         logM_ax = logM_ax[isfinite]
@@ -133,7 +142,34 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
             'x_label':x_label, 
             'y_label':y_label,
             'name':'GSMF',
-        }        
+        }
+        
+        
+    
+        
+        logM_ax, logPhi, logPhi_total_lo_err, logPhi_total_hi_err, logPhi_total_err, logPhi_total_err_v2 = gen.mass_function_with_error(
+            stellar_masses_eddington_biased, pos_Mpc, boxsize, Vcom, 
+            dlogM=dx, min_logM=min_log_gal_stellar_mass, max_logM=max_log_gal_stellar_mass, 
+            calc_min_logM=False, calc_max_logM=False, minN=minN)
+
+        isfinite = np.isfinite(logPhi)
+        logM_ax = logM_ax[isfinite]
+        logPhi = logPhi[isfinite]
+        logPhi_total_lo_err = logPhi_total_lo_err[isfinite]
+        logPhi_total_hi_err = logPhi_total_hi_err[isfinite]
+        logPhi_total_err = logPhi_total_err[isfinite]
+        logPhi_total_err_v2 = logPhi_total_err_v2[isfinite]
+    
+    
+        save_data['log_data_eddington_biased'] = {
+            'x':logM_ax * x_units,
+            'xerr':np.zeros(len(logM_ax)) * x_units,
+            'y':logPhi * y_units,
+            'yerr':logPhi_total_err * y_units, 
+            'x_label':x_label, 
+            'y_label':y_label,
+            'name':'GSMF (Eddingtong Biased)',
+        }
         
         
         
@@ -145,7 +181,7 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
             os.mkdir(output_directory)
 
         for key, val in save_data.items():
-            output_filename = "%s_gsmf_v4_%s_%04d.hdf5" % (SIM, key, j)
+            output_filename = "%s_gsmf_%s_min%sgal_%04d.hdf5" % (SIM, key, minN, j)
 
             comment = f"h-corrected for SWIFT using cosmology: {cosmology}."
             citation = ""

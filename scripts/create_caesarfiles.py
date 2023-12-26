@@ -22,9 +22,10 @@ SIMDIR = args.simdir
 SIM = args.sim
 
 
+## Need to set this in here
 #SNAPLIST = list(range(4,16))
-SNAPLIST = list(range(0,16))
-#SNAPLIST = [15]
+# SNAPLIST = list(range(0,16))
+SNAPLIST = [15]
 
 print (SNAPLIST)
 

@@ -147,15 +147,23 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         y_label = r'quenched fraction'
         
         
-        logM_bins = np.array([9, 10, 11, 20])
+#         logM_bins = np.array([9, 10, 11, 20])
+#         logM_bins = np.array([10.5, 20])
+        logM_bins = np.array([11, 20])
+#         logM_bins = np.array([8, 10.5, 20])
         log_ssfr_bins = np.array([-np.inf, log_ssfr_lim])
     
-        quenched_fraction = gen.ssfr_fraction_func(log_stellar_masses, log_ssfr, log_ssfr_bins, dlogM=1, 
-                                                    min_logM=9, max_logM=13, calc_min_logM=False, calc_max_logM=False)
+#         quenched_fraction = gen.ssfr_fraction_func(log_stellar_masses, log_ssfr, log_ssfr_bins, dlogM=1, 
+#                                                     min_logM=9, max_logM=13, calc_min_logM=False, calc_max_logM=False)
+        quenched_fraction = gen.ssfr_fraction_func(log_stellar_masses, log_ssfr, log_ssfr_bins, dlogM=9, 
+                                                    min_logM=11, max_logM=20, calc_min_logM=False, calc_max_logM=False)
+#         quenched_fraction = gen.ssfr_fraction_func(log_stellar_masses, log_ssfr, log_ssfr_bins, dlogM=4.5, 
+#                                                     min_logM=6, max_logM=15, calc_min_logM=False, calc_max_logM=False)
+    
         quenched_fraction_v2 = gen.ssfr_fraction_func_v2(log_stellar_masses, log_ssfr, logM_bins, log_ssfr_bins)
         
         for ii in range(len(quenched_fraction)):
-            save_data['quenched_fraction'] = {
+            save_data['lowMstar11_quenched_fraction'] = {
                 'x':quenched_fraction[ii][0] * x_units,
                 'xerr':np.zeros(len(quenched_fraction[ii][0])) * x_units,
                 'y':quenched_fraction[ii][1] * y_units,
@@ -165,7 +173,8 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
                 'name':'Quenched Fraction',
             }
             
-            save_data['quenched_fraction_v2'] = {
+        for ii in range(len(quenched_fraction_v2)):
+            save_data['lowMstar11_quenched_fraction_v2'] = {
                 'x':quenched_fraction_v2[ii][0] * x_units,
                 'xerr':np.zeros(len(quenched_fraction_v2[ii][0])) * x_units,
                 'y':quenched_fraction_v2[ii][1] * y_units,

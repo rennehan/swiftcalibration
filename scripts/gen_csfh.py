@@ -134,9 +134,9 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
     for simulation_ in simulation_data.keys():
         scale_factor_, redshift_, sfr_ = simulation_data[simulation_]
         name_ = simulations_[simulation_]
-        scale_factor = scale_factor_[::thin]
-        redshift_ = redshift_[::thin]
-        sfr_ = sfr_[::thin]
+#         scale_factor = scale_factor_
+#         redshift_ = redshift_
+#         sfr_ = sfr_
     
     
     
@@ -145,14 +145,65 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
                                  'y':sfr_.value * y_units,
                                  'yerr':np.zeros(len(sfr_.value)) * y_units,
                                  'x_label':x_label,
-                                 'y_label':y_label}
+                                 'y_label':y_label,
+                             'plot_as':'points',
+                            }
+        
+        x_bin_centres, y_bin_means, y_bin_stds, y_bin_medians, y_bin_quantiles_lo, y_bin_quantiles_hi = gen.regular_bin(
+            redshift_, sfr_.value, 
+            dx=0.01, min_x=0, max_x=100,
+            calc_min_x=False, calc_max_x=False)
+        
+        save_data['binned_median'] = {'x':x_bin_centres * x_units,
+                                 'xerr':np.zeros(len(x_bin_centres)) * x_units,
+                                 'y':y_bin_medians * y_units,
+                                 'yerr':(np.abs(y_bin_medians - y_bin_quantiles_lo), np.abs(y_bin_medians - y_bin_quantiles_hi)) * y_units,
+                                 'x_label':x_label,
+                                 'y_label':y_label,
+                                     'plot_as':'line',
+                                     }
+        
+        save_data['binned_mean'] = {'x':x_bin_centres * x_units,
+                                 'xerr':np.zeros(len(x_bin_centres)) * x_units,
+                                 'y':y_bin_means * y_units,
+                                 'yerr':y_bin_stds * y_units,
+                                 'x_label':x_label,
+                                 'y_label':y_label,
+                                     'plot_as':'line',
+                                     }
+        
         
         save_data['log_data'] = {'x':np.log10(1+redshift_) * x_units,
                                  'xerr':np.zeros(len(np.log10(1+redshift_))) * x_units,
                                  'y':np.log10(sfr_) * y_units,
                                  'yerr':np.zeros(len(np.log10(sfr_))) * y_units,
                                  'x_label':x_label_log,
-                                 'y_label':y_label_log}
+                                 'y_label':y_label_log,
+                                'plot_as':'points',
+                                }
+        
+        x_bin_centres, y_bin_means, y_bin_stds, y_bin_medians, y_bin_quantiles_lo, y_bin_quantiles_hi = gen.regular_bin(
+            np.log10(1+redshift_), np.log10(sfr_), 
+            dx=0.01, min_x=0, max_x=100,
+            calc_min_x=False, calc_max_x=False)
+        
+        save_data['binned_log_median'] = {'x':x_bin_centres * x_units,
+                                 'xerr':np.zeros(len(x_bin_centres)) * x_units,
+                                 'y':y_bin_medians * y_units,
+                                 'yerr':(np.abs(y_bin_medians - y_bin_quantiles_lo), np.abs(y_bin_medians - y_bin_quantiles_hi)) * y_units,
+                                 'x_label':x_label,
+                                 'y_label':y_label,
+                                     'plot_as':'line',
+                                     }
+        
+        save_data['binned_log_mean'] = {'x':x_bin_centres * x_units,
+                                 'xerr':np.zeros(len(x_bin_centres)) * x_units,
+                                 'y':y_bin_means * y_units,
+                                 'yerr':y_bin_stds * y_units,
+                                 'x_label':x_label,
+                                 'y_label':y_label,
+                                     'plot_as':'line',
+                                     }
         
         
         
@@ -169,7 +220,7 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
             citation = ""
             bibcode = ""
             name = "CSFH"
-            plot_as = "line"
+            plot_as = val['plot_as']
             redshift_lower = 0
             redshift_upper = 0
 

@@ -107,7 +107,7 @@ def calc_min_count_bins(x, x_lo, x_hi, calc_min_x=True, calc_max_x=True,  min_N_
 
     
 
-def mass_function(mass, vol_com_Mpc, dlogM=0.5, min_logM=6, max_logM=14, calc_min_logM=True, calc_max_logM=True):
+def mass_function(mass, vol_com_Mpc, dlogM=0.5, min_logM=6, max_logM=14, calc_min_logM=True, calc_max_logM=True, minN=0):
     logbins, logbin_centres, nbins = calc_bins(np.log10(mass), dx=dlogM, 
                                                min_x=min_logM, max_x=max_logM, 
                                                calc_min_x=calc_min_logM, calc_max_x=calc_max_logM)
@@ -116,50 +116,62 @@ def mass_function(mass, vol_com_Mpc, dlogM=0.5, min_logM=6, max_logM=14, calc_mi
     
     x = bin_centres    
     hist, edg = np.histogram(mass, bins=bins, range=(bins.min(), bins.max()))
+#     print(hist)
+    
+    # Remove bins that have fewer than minN counts
+    filter_ = hist >= minN
+    x = x[filter_]
+    hist = hist[filter_]
+    nbins = len(x)
+    
     y = hist / (vol_com_Mpc * dlogM)
-    return x, y, bins, nbins
+    return x, y, bins, nbins, filter_
 
 
-def cosmic_variance(mass, pos, boxsize, vol_com_Mpc, dlogM=0.5, min_logM=6, max_logM=14, calc_min_logM=True, calc_max_logM=True):
+def cosmic_variance(mass, pos, boxsize, vol_com_Mpc, dlogM=0.5, min_logM=6, max_logM=14, calc_min_logM=True, calc_max_logM=True, minN=0):
     pos = np.floor(pos / (0.5 * boxsize)).astype(np.int)
     gal_index = pos[:, 0] + pos[:, 1] * 2 + pos[:, 2] * 4
-    x, y, bins, nbins = mass_function(mass, vol_com_Mpc, dlogM=dlogM, min_logM=min_logM, max_logM=max_logM, 
-                                      calc_min_logM=calc_min_logM, calc_max_logM=calc_max_logM)
+    x, y, bins, nbins, _filter_ = mass_function(mass, vol_com_Mpc, dlogM=dlogM, min_logM=min_logM, max_logM=max_logM, 
+                                      calc_min_logM=calc_min_logM, calc_max_logM=calc_max_logM, minN=minN)
+    
+    x_0, y_0, bins_0, nbins_0, filter_0 = mass_function(mass, vol_com_Mpc, dlogM=dlogM, min_logM=min_logM, max_logM=max_logM, 
+                                      calc_min_logM=calc_min_logM, calc_max_logM=calc_max_logM, minN=0)
 
-    store_mf = np.zeros((nbins, 8))
+    store_mf = np.zeros((nbins_0, 8))
     for i0 in range(8):
         m_s_ = mass[gal_index==i0]
         if len(m_s_) < 1: 
             continue
             
         if calc_min_logM and calc_max_logM:
-            _x, _y, _bins, _nbins = mass_function(m_s_, vol_com_Mpc, dlogM=dlogM, 
+            _x, _y, _bins, _nbins, _ = mass_function(m_s_, vol_com_Mpc, dlogM=dlogM, 
                                                   min_logM=np.log10(np.nanmin(mass)), max_logM=np.log10(np.nanmax(mass)),
-                                                  calc_min_logM=False, calc_max_logM=False)
+                                                  calc_min_logM=False, calc_max_logM=False, minN=0)
         elif calc_min_logM and not calc_max_logM:
-            _x, _y, _bins, _nbins = mass_function(m_s_, vol_com_Mpc, dlogM=dlogM, 
+            _x, _y, _bins, _nbins, _ = mass_function(m_s_, vol_com_Mpc, dlogM=dlogM, 
                                                   min_logM=np.log10(np.nanmin(mass)), max_logM=max_logM,
-                                                  calc_min_logM=False, calc_max_logM=False)
+                                                  calc_min_logM=False, calc_max_logM=False, minN=0)
         elif not calc_min_logM and calc_max_logM:
-            _x, _y, _bins, _nbins = mass_function(m_s_, vol_com_Mpc, dlogM=dlogM, 
+            _x, _y, _bins, _nbins, _ = mass_function(m_s_, vol_com_Mpc, dlogM=dlogM, 
                                                   min_logM=min_logM, max_logM=np.log10(np.nanmax(mass)),
-                                                  calc_min_logM=False, calc_max_logM=False)
+                                                  calc_min_logM=False, calc_max_logM=False, minN=0)
         else:
-            _x, _y, _bins, _nbins = mass_function(m_s_, vol_com_Mpc, dlogM=dlogM, 
+            _x, _y, _bins, _nbins, _ = mass_function(m_s_, vol_com_Mpc, dlogM=dlogM, 
                                                   min_logM=min_logM, max_logM=max_logM,
-                                                  calc_min_logM=False, calc_max_logM=False)
+                                                  calc_min_logM=False, calc_max_logM=False, minN=0)
 
         phi_  = np.log10(8 * _y)
-        phi_  = np.where(phi_ < -100, np.log10(y), phi_)
+        phi_  = np.where(phi_ < -100, np.log10(y_0), phi_)
         store_mf[:,i0] = phi_
     store_mf = np.ma.masked_invalid(store_mf)
     var = np.ma.std(store_mf, axis=1)
+    var = var[_filter_]
     return np.log10(x), np.log10(y), np.array(var)
 
 
-def poisson_error(mass, vol_com_Mpc, dlogM=0.5, min_logM=6, max_logM=14, calc_min_logM=True, calc_max_logM=True):
-    x, Phi, bins, nbins = mass_function(mass, vol_com_Mpc, dlogM=dlogM, min_logM=min_logM, max_logM=max_logM,
-                                        calc_min_logM=calc_min_logM, calc_max_logM=calc_max_logM)
+def poisson_error(mass, vol_com_Mpc, dlogM=0.5, min_logM=6, max_logM=14, calc_min_logM=True, calc_max_logM=True, minN=0):
+    x, Phi, bins, nbins, filter_ = mass_function(mass, vol_com_Mpc, dlogM=dlogM, min_logM=min_logM, max_logM=max_logM,
+                                        calc_min_logM=calc_min_logM, calc_max_logM=calc_max_logM, minN=minN)
     Phi_err = np.sqrt(Phi * (vol_com_Mpc * dlogM))/(vol_com_Mpc * dlogM)
     
     logPhi_lo_err = np.abs(np.log10(Phi) - np.log10(Phi - Phi_err))
@@ -172,15 +184,16 @@ def poisson_error(mass, vol_com_Mpc, dlogM=0.5, min_logM=6, max_logM=14, calc_mi
     return logPhi_lo_err, logPhi_hi_err, logPhi_err, logPhi_err_v2
 
 
-def mass_function_with_error(mass, pos, boxsize, vol_com_Mpc, dlogM=0.5, min_logM=6, max_logM=14, calc_min_logM=True, calc_max_logM=True):
+def mass_function_with_error(mass, pos, boxsize, vol_com_Mpc, dlogM=0.5, min_logM=6, max_logM=14, calc_min_logM=True, calc_max_logM=True, minN=0):
     logx, logPhi, log_Phi_cv_err = cosmic_variance(mass, pos, boxsize, vol_com_Mpc, dlogM=dlogM, min_logM=min_logM, max_logM=max_logM,
-                                                   calc_min_logM=calc_min_logM, calc_max_logM=calc_max_logM)
+                                                   calc_min_logM=calc_min_logM, calc_max_logM=calc_max_logM, minN=minN)
     
     logPhi_lo_poisson_err, logPhi_hi_poisson_err, logPhi_poisson_err, logPhi_poisson_err_v2 = poisson_error(
         mass, vol_com_Mpc, dlogM=dlogM, 
         min_logM=min_logM, max_logM=max_logM,
         calc_min_logM=calc_min_logM, 
-        calc_max_logM=calc_max_logM)
+        calc_max_logM=calc_max_logM, 
+        minN=minN)
     
     logPhi_total_lo_err = np.sqrt(log_Phi_cv_err**2 + logPhi_lo_poisson_err**2)
     logPhi_total_hi_err = np.sqrt(log_Phi_cv_err**2 + logPhi_hi_poisson_err**2)
@@ -308,13 +321,23 @@ def ssfr_fraction_func_v2(logM, log_ssfr, logM_bins, log_ssfr_bins):
 
 ## Scaling relationship binning functions
 
-def regular_bin(x, y, dx=0.5, min_x=0, max_x=100, calc_min_x=True, calc_max_x=True):
-    # Bin data and find means/medians + std devs/quantiles in each bin
+def regular_bin(x, y, dx=0.5, min_x=0, max_x=100, calc_min_x=True, calc_max_x=True, minN=0):
+    ## Bin data and find means/medians + std devs/quantiles in each bin
     
     x_bins, x_bin_centres, x_nbins = calc_bins(x, dx=dx, min_x=min_x, max_x=max_x, 
                                                calc_min_x=calc_min_x, calc_max_x=calc_max_x)
     
     y_binned = [y[np.where((x >= low) & (x < high))] for low, high in zip(x_bins[:-1], x_bins[1:])]
+#     print(y_binned)
+    
+    # Remove bins with fewer than minN counts
+    y_counts = np.array([len(y_vals) for y_vals in y_binned])
+#     print(y_counts)
+    filter_ = y_counts >= minN
+    x_bin_centres = x_bin_centres[filter_]
+#     y_binned = y_binned[filter_]
+    y_binned = [y_binned[ii] for ii in range(len(y_counts)) if filter_[ii]]
+#     print(y_binned)
     
     y_bin_means = np.array([np.nanmean(y_vals) for y_vals in y_binned])
     y_bin_stds = np.array([np.nanstd(y_vals) for y_vals in y_binned])

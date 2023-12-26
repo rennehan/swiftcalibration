@@ -54,6 +54,13 @@ min_log_gal_stellar_mass_for_fitting = 10
 max_log_gal_stellar_mass_for_fitting = 13
 
 
+## Minimum number of galaxies required in a bin when binning
+minN = 10
+
+## x spacing for binning
+dx = 0.25
+
+
 
 
 def gen_observable(SNAPLIST, SNAPDIR, SIM):
@@ -140,8 +147,8 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         ## Bin data and find means/medians in each bin
         x_bin_centres, y_bin_means, y_bin_stds, y_bin_medians, y_bin_quantiles_lo, y_bin_quantiles_hi = gen.regular_bin(
             log_gal_stellar_masses_no_zeros, log_gal_bh_masses_no_zeros, 
-            dx=0.5, min_x=min_log_gal_stellar_mass, max_x=max_log_gal_stellar_mass, 
-            calc_min_x=False, calc_max_x=False)
+            dx=dx, min_x=min_log_gal_stellar_mass, max_x=max_log_gal_stellar_mass, 
+            calc_min_x=False, calc_max_x=False, minN=minN)
         
         save_data['binned_log_mean'] = {
             'x':x_bin_centres * x_units,
@@ -165,58 +172,58 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         
         
         ## Variable binning such that there are EXACTLY X objects (cannot be set) in N bins (must be set)
-        x_bin_centres, y_bin_means, y_bin_stds, y_bin_medians, y_bin_quantiles_lo, y_bin_quantiles_hi = gen.exact_count_bin(
-            log_gal_stellar_masses_no_zeros, log_gal_bh_masses_no_zeros,
-            Nbins=20, min_x=min_log_gal_stellar_mass, max_x=max_log_gal_stellar_mass, 
-            calc_min_x=False, calc_max_x=False)
+#         x_bin_centres, y_bin_means, y_bin_stds, y_bin_medians, y_bin_quantiles_lo, y_bin_quantiles_hi = gen.exact_count_bin(
+#             log_gal_stellar_masses_no_zeros, log_gal_bh_masses_no_zeros,
+#             Nbins=20, min_x=min_log_gal_stellar_mass, max_x=max_log_gal_stellar_mass, 
+#             calc_min_x=False, calc_max_x=False)
         
-        save_data['exact_count_binned_log_mean'] = {
-            'x':x_bin_centres * x_units,
-            'xerr':np.zeros(len(x_bin_centres)) * x_units,
-            'y':y_bin_means * y_units,
-            'yerr':y_bin_stds * y_units, 
-            'x_label':x_label, 
-            'y_label':y_label,
-            'plot_as':'line',
-        }
-        save_data['exact_count_binned_log_median'] = {
-            'x':x_bin_centres * x_units,
-            'xerr':np.zeros(len(x_bin_centres)) * x_units,
-            'y':y_bin_medians * y_units,
-            'yerr':(np.abs(y_bin_medians - y_bin_quantiles_lo), np.abs(y_bin_medians - y_bin_quantiles_hi)) * y_units, 
-            'x_label':x_label, 
-            'y_label':y_label,
-            'plot_as':'line',
-        }
+#         save_data['exact_count_binned_log_mean'] = {
+#             'x':x_bin_centres * x_units,
+#             'xerr':np.zeros(len(x_bin_centres)) * x_units,
+#             'y':y_bin_means * y_units,
+#             'yerr':y_bin_stds * y_units, 
+#             'x_label':x_label, 
+#             'y_label':y_label,
+#             'plot_as':'line',
+#         }
+#         save_data['exact_count_binned_log_median'] = {
+#             'x':x_bin_centres * x_units,
+#             'xerr':np.zeros(len(x_bin_centres)) * x_units,
+#             'y':y_bin_medians * y_units,
+#             'yerr':(np.abs(y_bin_medians - y_bin_quantiles_lo), np.abs(y_bin_medians - y_bin_quantiles_hi)) * y_units, 
+#             'x_label':x_label, 
+#             'y_label':y_label,
+#             'plot_as':'line',
+#         }
         
         
         
         
         ## Variable binning such that there are AT LEAST N objects in each bin
-        x_bin_centres, y_bin_means, y_bin_stds, y_bin_medians, y_bin_quantiles_lo, y_bin_quantiles_hi = gen.min_count_bin(
-            log_gal_stellar_masses_no_zeros, log_gal_bh_masses_no_zeros,
-            x_lo=min_log_gal_stellar_mass, x_hi=max_log_gal_stellar_mass, 
-            calc_min_x=True, calc_max_x=False,
-            min_N_obj=3, min_bin_width=0.5, delta_x=0.02)
+#         x_bin_centres, y_bin_means, y_bin_stds, y_bin_medians, y_bin_quantiles_lo, y_bin_quantiles_hi = gen.min_count_bin(
+#             log_gal_stellar_masses_no_zeros, log_gal_bh_masses_no_zeros,
+#             x_lo=min_log_gal_stellar_mass, x_hi=max_log_gal_stellar_mass, 
+#             calc_min_x=True, calc_max_x=False,
+#             min_N_obj=3, min_bin_width=0.5, delta_x=0.02)
         
-        save_data['min_count_binned_log_mean'] = {
-            'x':x_bin_centres * x_units,
-            'xerr':np.zeros(len(x_bin_centres)) * x_units,
-            'y':y_bin_means * y_units,
-            'yerr':y_bin_stds * y_units, 
-            'x_label':x_label, 
-            'y_label':y_label,
-            'plot_as':'line',
-        }
-        save_data['min_count_binned_log_median'] = {
-            'x':x_bin_centres * x_units,
-            'xerr':np.zeros(len(x_bin_centres)) * x_units,
-            'y':y_bin_medians * y_units,
-            'yerr':(np.abs(y_bin_medians - y_bin_quantiles_lo), np.abs(y_bin_medians - y_bin_quantiles_hi)) * y_units, 
-            'x_label':x_label, 
-            'y_label':y_label,
-            'plot_as':'line',
-        }
+#         save_data['min_count_binned_log_mean'] = {
+#             'x':x_bin_centres * x_units,
+#             'xerr':np.zeros(len(x_bin_centres)) * x_units,
+#             'y':y_bin_means * y_units,
+#             'yerr':y_bin_stds * y_units, 
+#             'x_label':x_label, 
+#             'y_label':y_label,
+#             'plot_as':'line',
+#         }
+#         save_data['min_count_binned_log_median'] = {
+#             'x':x_bin_centres * x_units,
+#             'xerr':np.zeros(len(x_bin_centres)) * x_units,
+#             'y':y_bin_medians * y_units,
+#             'yerr':(np.abs(y_bin_medians - y_bin_quantiles_lo), np.abs(y_bin_medians - y_bin_quantiles_hi)) * y_units, 
+#             'x_label':x_label, 
+#             'y_label':y_label,
+#             'plot_as':'line',
+#         }
         
         
         
@@ -250,7 +257,7 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
             os.mkdir(output_directory)
 
         for key, val in save_data.items():
-            output_filename = "%s_bhmsm_v4_%s_%04d.hdf5" % (SIM, key, j)
+            output_filename = "%s_bhmsm_%s_min%sgal_%04d.hdf5" % (SIM, key, minN, j)
 
             comment = f"h-corrected for SWIFT using cosmology: {cosmology}."
             citation = ""

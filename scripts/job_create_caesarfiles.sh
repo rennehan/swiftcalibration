@@ -8,7 +8,7 @@
 ##SBATCH -o /scratch/b/babul/aspadawe/swift_tests/cali_simba/slurm_files/slurm-%j.out
 ##SBATCH -o /scratch/b/babul/aspadawe/swift_tests/s50n512_simba_ps2020/slurm_files/slurm-%j.out
 ##SBATCH -o /scratch/b/babul/aspadawe/swift_tests/s50n512_simba_ps2020_calibration6_v2_mpi/slurm_files/slurm-%j.out
-#SBATCH -o /scratch/b/babul/aspadawe/swift_tests/s50n512_simba_ps2020_sphenix_calibration7_mpi/slurm_files/slurm-%j.out
+#SBATCH -o /scratch/b/babul/aspadawe/swift_tests/s50n512_simba_ps2020_calibration6_v2_mpi/slurm_files/slurm-%j.out
 #########################################################
 #SBATCH --time=12:00:0
 #SBATCH --nodes=1
@@ -22,7 +22,8 @@ conda activate yt_swift_caesar
 #root_dir=/scratch/b/babul/aspadawe/swift_tests/cali_simba/past_calibrations
 root_dir=/scratch/b/babul/aspadawe/swift_tests
 #cali_dir=/swimba_s25n256_ps2020_64x_v2/calibrations
-cali_dir=/s50n512_simba_ps2020_sphenix_calibration7_mpi
+#cali_dir=/s50n512_simba_ps2020_sphenix_calibration7_mpi
+cali_dir=/s50n512_simba_ps2020_calibration6_v2_mpi
 #cali_dir=/s50n512_simba_ps2020
 #cali_subdir=/cali_*
 cali_subdir=/.
