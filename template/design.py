@@ -12,7 +12,7 @@ spec = ModelSpecification(
         "SIMBAAGN:jet_mass_min_Msun"
     ],
     parameter_printable_names=[
-        "$v_{a}",
+        "$v_{a}$",
         "$\eta_{0}$",
         "$\varepsilon_{\\rm torque}$",
         "$\\log_{10}$ $M_{\\rm BH, lim}/M_{\\rm \odot}$"
