@@ -1,0 +1,112 @@
+appdirs==1.4.4
+arviz==0.15.1
+astropy @ file:///opt/conda/conda-bld/astropy_1657786094003/work
+asttokens @ file:///opt/conda/conda-bld/asttokens_1646925590279/work
+attrs==22.2.0
+backcall @ file:///home/ktietz/src/ci/backcall_1611930011877/work
+brotlipy==0.7.0
+caesar==0.2b0
+certifi @ file:///croot/certifi_1671487769961/work/certifi
+cffi @ file:///croot/cffi_1670423208954/work
+charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
+cmyt==1.1.3
+colorspacious==1.1.2
+comm @ file:///croot/comm_1671231121260/work
+contourpy==1.0.7
+corner==2.2.1
+cryptography @ file:///croot/cryptography_1677533068310/work
+cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
+Cython @ file:///croot/cython_1676568029361/work
+debugpy @ file:///tmp/build/80754af9/debugpy_1637091799509/work
+decorator @ file:///opt/conda/conda-bld/decorator_1643638310831/work
+dill==0.3.6
+emcee==3.1.4
+entrypoints @ file:///tmp/build/80754af9/entrypoints_1649926439650/work
+executing @ file:///opt/conda/conda-bld/executing_1646925071911/work
+fonttools==4.38.0
+george==0.4.0
+h5netcdf==1.1.0
+h5py @ file:///tmp/abs_4aewd3wzey/croots/recipe/h5py_1659091371897/work
+idna @ file:///croot/idna_1666125576474/work
+importlib-resources==5.12.0
+ipykernel @ file:///croot/ipykernel_1671488378391/work
+ipython @ file:///croot/ipython_1674681422581/work
+jedi @ file:///tmp/build/80754af9/jedi_1644297102865/work
+Jinja2==3.1.2
+joblib @ file:///croot/joblib_1666298844297/work
+jupyter_client @ file:///croot/jupyter_client_1671703053786/work
+jupyter_core @ file:///croot/jupyter_core_1672332224593/work
+kiwisolver @ file:///croot/kiwisolver_1672387140495/work
+llvmlite==0.39.1
+MarkupSafe==2.1.2
+matplotlib @ file:///croot/matplotlib-suite_1677674301264/work
+matplotlib-inline @ file:///opt/conda/conda-bld/matplotlib-inline_1662014470464/work
+mkl-fft==1.3.1
+mkl-random @ file:///tmp/build/80754af9/mkl_random_1626186066731/work
+mkl-service==2.4.0
+more-itertools==9.1.0
+mpmath==1.2.1
+multiprocess==0.70.14
+munkres==1.1.4
+nest-asyncio @ file:///croot/nest-asyncio_1672387112409/work
+numba==0.56.4
+numpy @ file:///croot/numpy_and_numpy_base_1672336185480/work
+p-tqdm==1.4.0
+packaging==23.0
+pandas==1.5.3
+parso @ file:///opt/conda/conda-bld/parso_1641458642106/work
+pathos==0.3.0
+pexpect @ file:///tmp/build/80754af9/pexpect_1605563209008/work
+pickleshare @ file:///tmp/build/80754af9/pickleshare_1606932040724/work
+Pillow==9.4.0
+platformdirs @ file:///opt/conda/conda-bld/platformdirs_1662711380096/work
+ply==3.11
+pooch @ file:///tmp/build/80754af9/pooch_1623324770023/work
+pox==0.3.2
+ppft==1.7.6.6
+prompt-toolkit @ file:///croot/prompt-toolkit_1672387306916/work
+psutil @ file:///opt/conda/conda-bld/psutil_1656431268089/work
+ptyprocess @ file:///tmp/build/80754af9/ptyprocess_1609355006118/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
+pure-eval @ file:///opt/conda/conda-bld/pure_eval_1646925070566/work
+pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+pyDOE==0.3.8
+pyerfa @ file:///tmp/build/80754af9/pyerfa_1621556109336/work
+pyGadgetReader==2.6
+Pygments @ file:///opt/conda/conda-bld/pygments_1644249106324/work
+pyOpenSSL @ file:///croot/pyopenssl_1677607685877/work
+pyparsing @ file:///opt/conda/conda-bld/pyparsing_1661452539315/work
+PyQt5-sip==12.11.0
+PySocks @ file:///tmp/build/80754af9/pysocks_1605305812635/work
+python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
+pytz==2022.7.1
+PyYAML @ file:///croot/pyyaml_1670514731622/work
+pyzmq @ file:///opt/conda/conda-bld/pyzmq_1657724186960/work
+requests @ file:///opt/conda/conda-bld/requests_1657734628632/work
+ruamel.yaml==0.17.21
+ruamel.yaml.clib==0.2.7
+SALib==1.4.7
+scikit-learn==1.2.1
+scipy==1.10.0
+sip @ file:///tmp/abs_44cd77b_pu/croots/recipe/sip_1659012365470/work
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+stack-data @ file:///opt/conda/conda-bld/stack_data_1646927590127/work
+-e git+https://github.com/SWIFTSIM/emulator.git@478e04c3d1df0d4328157454492c254703561ec7#egg=swiftemulator
+swiftpipeline==0.3.5
+swiftsimio==6.1.1
+sympy==1.11.1
+threadpoolctl==3.1.0
+toml @ file:///tmp/build/80754af9/toml_1616166611790/work
+tomli==2.0.1
+tomli_w==1.0.0
+tornado @ file:///opt/conda/conda-bld/tornado_1662061693373/work
+tqdm==4.64.1
+traitlets @ file:///croot/traitlets_1671143879854/work
+typing_extensions==4.6.2
+unyt==2.9.5
+urllib3 @ file:///croot/urllib3_1673575502006/work
+velociraptor==0.15.8
+wcwidth @ file:///Users/ktietz/demo/mc3/conda-bld/wcwidth_1629357192024/work
+xarray==2023.5.0
+xarray-einstats==0.5.1
+-e git+https://github.com/rennehan/yt-swift.git@455e8281c690bfedb6286d5fa8fc4ea036fbc9e3#egg=yt
+zipp==3.15.0
