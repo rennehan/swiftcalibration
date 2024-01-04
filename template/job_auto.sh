@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #########################################################
-#SBATCH -J JOB_NAME_s50n512_simba_auto
+#SBATCH -J JOB_NAME_auto
 #SBATCH --mail-user=apadawer@uvic.ca
 #SBATCH --mail-type=FAIL
 #SBATCH --account=rrg-babul-ad
@@ -25,11 +25,9 @@ if [ "$num" -gt 0 ]; then
 fi
 
 
-#module load intel/2019u4 intelmpi/2019u4 hdf5/1.8.21 fftw/3.3.8 gsl/2.5 metis/5.1.0-shared parmetis/4.0.3-shared autotools tbb/2019u9
-#module load intel/2019u4 intelmpi/2019u4 hdf5/1.8.21 fftw/3.3.8 gsl/2.5 metis/5.1.0-shared parmetis/4.0.3-shared
 module load NiaEnv/.2022a intel/2022u2 intelmpi/2022u2+ucx-1.11.2 hdf5/1.10.9 fftw/3.3.10 gsl/2.7 parmetis/4.0.3-shared autotools
 
-mpirun -np 4 ./swift_mpi_ps2020_sphenix_v2 ${RESTART} --pin --cosmology --simba --threads=20 YML_FILE
+mpirun -np 4 ./swift ${RESTART} --pin --cosmology --simba --threads=20 YML_FILE
 
 
 # RESUBMIT 10 TIMES HERE

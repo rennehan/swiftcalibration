@@ -21,7 +21,6 @@ root_dir=/scratch/b/babul/aspadawe/swift_tests/cali_simba/past_calibrations
 cali_dir=/swimba_s50n512_ps2020_sphenix_32x/calibrations
 cali_subdir=/cali_*
 #cali_subdir=(/cali_0006 /cali_0012 /cali_0025 /cali_0030 /cali_0031)
-# cali_subdir=(/cali_0007)
 sim_name=simba_s50n512
 
 full_dir=$root_dir$cali_dir

@@ -29,6 +29,8 @@ MODELDIR = args.modeldir
 SIMDIR = args.simdir
 SIM = args.sim
 
+
+## Need to set this in here
 #SNAPLIST = list(range(0,16))
 SNAPLIST = [15]
 
@@ -36,6 +38,7 @@ print (SNAPLIST)
 
 
 
+## Units
 mass_units = unyt.Solar_Mass
 ssfr_units = unyt.Gyr**(-1)
 
@@ -84,13 +87,17 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         
         
         
-#         stellar_masses = np.array([gal.masses['stellar'] for gal in obj.galaxies])
-#         log_stellar_masses = np.log10(stellar_masses)
-#         log_ssfr = np.log10(np.array([gal.sfr.to('Msun/Gyr')/gal.masses['stellar'].to('Msun') for gal in obj.galaxies]))
         
-        stellar_masses = np.array([gal.masses['stellar'].to(mass_units) for gal in obj.galaxies if gal.central])
+        ## Get stellar masses and sSFR from simulation
+        stellar_masses = np.array([gal.masses['stellar'].to(mass_units) for gal in obj.galaxies])
         log_stellar_masses = np.log10(stellar_masses)
-        log_ssfr = np.log10(np.array([(gal.sfr/gal.masses['stellar']).to(ssfr_units) for gal in obj.galaxies if gal.central]))
+        log_ssfr = np.log10(np.array([(gal.sfr/gal.masses['stellar']).to(ssfr_units) for gal in obj.galaxies]))
+        
+        
+        ## Same but only for central galaxies
+#         stellar_masses = np.array([gal.masses['stellar'].to(mass_units) for gal in obj.galaxies if gal.central])
+#         log_stellar_masses = np.log10(stellar_masses)
+#         log_ssfr = np.log10(np.array([(gal.sfr/gal.masses['stellar']).to(ssfr_units) for gal in obj.galaxies if gal.central]))
         
         
         # Add eddington bias to calculated/measured/observed stellar masses (for GSMF only?)

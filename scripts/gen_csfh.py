@@ -34,6 +34,7 @@ SIMDIR = args.simdir
 SIM = args.sim
 
 
+## Need to set this in here
 #SNAPLIST = list(range(0,16))
 SNAPLIST = [15]
 
@@ -41,6 +42,7 @@ print (SNAPLIST)
 
 
 
+## Units and labels
 sfr_output_units = unyt.msun / (unyt.year * unyt.Mpc**3)
 
 x_units = unyt.dimensionless
@@ -140,70 +142,78 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
     
     
     
-        save_data['data'] = {'x':redshift_ * x_units,
-                                 'xerr':np.zeros(len(redshift_)) * x_units,
-                                 'y':sfr_.value * y_units,
-                                 'yerr':np.zeros(len(sfr_.value)) * y_units,
-                                 'x_label':x_label,
-                                 'y_label':y_label,
-                             'plot_as':'points',
-                            }
+        save_data['data'] = {
+            'x':redshift_ * x_units,
+            'xerr':np.zeros(len(redshift_)) * x_units,
+            'y':sfr_.value * y_units,
+            'yerr':np.zeros(len(sfr_.value)) * y_units,
+            'x_label':x_label,
+            'y_label':y_label,
+            'plot_as':'points',
+        }
         
         x_bin_centres, y_bin_means, y_bin_stds, y_bin_medians, y_bin_quantiles_lo, y_bin_quantiles_hi = gen.regular_bin(
             redshift_, sfr_.value, 
             dx=0.01, min_x=0, max_x=100,
             calc_min_x=False, calc_max_x=False)
         
-        save_data['binned_median'] = {'x':x_bin_centres * x_units,
-                                 'xerr':np.zeros(len(x_bin_centres)) * x_units,
-                                 'y':y_bin_medians * y_units,
-                                 'yerr':(np.abs(y_bin_medians - y_bin_quantiles_lo), np.abs(y_bin_medians - y_bin_quantiles_hi)) * y_units,
-                                 'x_label':x_label,
-                                 'y_label':y_label,
-                                     'plot_as':'line',
-                                     }
+        save_data['binned_median'] = {
+            'x':x_bin_centres * x_units,
+            'xerr':np.zeros(len(x_bin_centres)) * x_units,
+            'y':y_bin_medians * y_units,
+            'yerr':(np.abs(y_bin_medians - y_bin_quantiles_lo), np.abs(y_bin_medians - y_bin_quantiles_hi)) * y_units,
+            'x_label':x_label,
+            'y_label':y_label,
+            'plot_as':'line',
+        }
         
-        save_data['binned_mean'] = {'x':x_bin_centres * x_units,
-                                 'xerr':np.zeros(len(x_bin_centres)) * x_units,
-                                 'y':y_bin_means * y_units,
-                                 'yerr':y_bin_stds * y_units,
-                                 'x_label':x_label,
-                                 'y_label':y_label,
-                                     'plot_as':'line',
-                                     }
+        save_data['binned_mean'] = {
+            'x':x_bin_centres * x_units,
+            'xerr':np.zeros(len(x_bin_centres)) * x_units,
+            'y':y_bin_means * y_units,
+            'yerr':y_bin_stds * y_units,
+            'x_label':x_label,
+            'y_label':y_label,
+            'plot_as':'line',
+        }
         
         
-        save_data['log_data'] = {'x':np.log10(1+redshift_) * x_units,
-                                 'xerr':np.zeros(len(np.log10(1+redshift_))) * x_units,
-                                 'y':np.log10(sfr_) * y_units,
-                                 'yerr':np.zeros(len(np.log10(sfr_))) * y_units,
-                                 'x_label':x_label_log,
-                                 'y_label':y_label_log,
-                                'plot_as':'points',
-                                }
+        save_data['log_data'] = {
+            'x':np.log10(1+redshift_) * x_units,
+            'xerr':np.zeros(len(np.log10(1+redshift_))) * x_units,
+            'y':np.log10(sfr_) * y_units,
+            'yerr':np.zeros(len(np.log10(sfr_))) * y_units,
+            'x_label':x_label_log,
+            'y_label':y_label_log,
+            'plot_as':'points',
+        }
+        
+        
         
         x_bin_centres, y_bin_means, y_bin_stds, y_bin_medians, y_bin_quantiles_lo, y_bin_quantiles_hi = gen.regular_bin(
             np.log10(1+redshift_), np.log10(sfr_), 
             dx=0.01, min_x=0, max_x=100,
             calc_min_x=False, calc_max_x=False)
         
-        save_data['binned_log_median'] = {'x':x_bin_centres * x_units,
-                                 'xerr':np.zeros(len(x_bin_centres)) * x_units,
-                                 'y':y_bin_medians * y_units,
-                                 'yerr':(np.abs(y_bin_medians - y_bin_quantiles_lo), np.abs(y_bin_medians - y_bin_quantiles_hi)) * y_units,
-                                 'x_label':x_label,
-                                 'y_label':y_label,
-                                     'plot_as':'line',
-                                     }
+        save_data['binned_log_median'] = {
+            'x':x_bin_centres * x_units,
+            'xerr':np.zeros(len(x_bin_centres)) * x_units,
+            'y':y_bin_medians * y_units,
+            'yerr':(np.abs(y_bin_medians - y_bin_quantiles_lo), np.abs(y_bin_medians - y_bin_quantiles_hi)) * y_units,
+            'x_label':x_label,
+            'y_label':y_label,
+            'plot_as':'line',
+        }
         
-        save_data['binned_log_mean'] = {'x':x_bin_centres * x_units,
-                                 'xerr':np.zeros(len(x_bin_centres)) * x_units,
-                                 'y':y_bin_means * y_units,
-                                 'yerr':y_bin_stds * y_units,
-                                 'x_label':x_label,
-                                 'y_label':y_label,
-                                     'plot_as':'line',
-                                     }
+        save_data['binned_log_mean'] = {
+            'x':x_bin_centres * x_units,
+            'xerr':np.zeros(len(x_bin_centres)) * x_units,
+            'y':y_bin_means * y_units,
+            'yerr':y_bin_stds * y_units,
+            'x_label':x_label,
+            'y_label':y_label,
+            'plot_as':'line',
+        }
         
         
         

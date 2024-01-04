@@ -30,12 +30,15 @@ MODELDIR = args.modeldir
 SIMDIR = args.simdir
 SIM = args.sim
 
+
+## Need to set this in here
 #SNAPLIST = list(range(0,16))
 SNAPLIST = [15]
 
 print (SNAPLIST)
 
 
+## Units and labels
 x_units = unyt.Solar_Mass
 length_units = 'Mpccm'
 y_units = unyt.Mpc**(-3)
@@ -98,7 +101,8 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         save_data = {}
         
 
-
+            
+        ## Stellar masses from simulation
         stellar_masses = np.array([gal.masses['stellar'].in_units(x_units) for gal in obj.galaxies])
         log_stellar_masses = np.log10(stellar_masses)
         pos_Mpc = np.array([gal.pos.in_units(length_units) for gal in obj.galaxies])
@@ -119,6 +123,7 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         
         
         
+        ## Unbiased stellar mass function
         
         logM_ax, logPhi, logPhi_total_lo_err, logPhi_total_hi_err, logPhi_total_err, logPhi_total_err_v2 = gen.mass_function_with_error(
             stellar_masses, pos_Mpc, boxsize, Vcom, 
@@ -147,6 +152,8 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         
     
         
+        ## Eddington biased stellar mass function
+        
         logM_ax, logPhi, logPhi_total_lo_err, logPhi_total_hi_err, logPhi_total_err, logPhi_total_err_v2 = gen.mass_function_with_error(
             stellar_masses_eddington_biased, pos_Mpc, boxsize, Vcom, 
             dlogM=dx, min_logM=min_log_gal_stellar_mass, max_logM=max_log_gal_stellar_mass, 
@@ -168,7 +175,7 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
             'yerr':logPhi_total_err * y_units, 
             'x_label':x_label, 
             'y_label':y_label,
-            'name':'GSMF (Eddingtong Biased)',
+            'name':'GSMF (Eddington Biased)',
         }
         
         

@@ -33,6 +33,7 @@ SIMDIR = args.simdir
 SIM = args.sim
 
 
+## Need to set this in here
 #SNAPLIST = list(range(0,16))
 SNAPLIST = [15]
 
@@ -40,6 +41,7 @@ print (SNAPLIST)
 
 
 
+# Set units and labels
 x_units = unyt.Solar_Mass
 y_units = unyt.Solar_Mass
 
@@ -47,6 +49,7 @@ x_label = r'$\log(M_{\star}\,/\,%s)$' % x_units.units.latex_representation()
 y_label = r'$\log(M_{BH}\,/\,%s)$' % x_units.units.latex_representation()
 
 
+# Min and max stellar masses
 min_log_gal_stellar_mass = 8
 max_log_gal_stellar_mass = 14
 

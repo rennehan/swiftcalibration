@@ -2,18 +2,58 @@ import os
 import numpy as np
 from glob import glob
 from pathlib import Path
+import argparse as ap
 
-#data_dir = '/home/b/babul/rennehan/work/swift'
-data_dir = '/scratch/b/babul/aspadawe/swift_tests/s25n256_simba_cloudy'
-#files_to_link = ['swift', 'yieldtables', 'photometry', 'output_list_cali.txt', 'UV_dust1_CR1_G1_shield1.hdf5', 'Jenny_N128L12.dat.hdf5', 'velo.cfg']
-#files_to_link = ['swift', 'yieldtables', 'photometry', 'output_list_cali.txt', 'UV_dust1_CR1_G1_shield1.hdf5', 'Jenny_N128L12.dat.hdf5', 'chem5_tables', 'CloudyData_UVB=FG2011_shielded.h5']
-files_to_link = ['swift', 'yieldtables', 'photometry', 'output_list_cali.txt', 'UV_dust1_CR1_G1_shield1.hdf5', 'Jenny_N256L25.dat.hdf5', 'chem5_tables', 'CloudyData_UVB=HM2012_shielded.h5']
+#import logging
+#logger = logging.getLogger(__name__)
 
-with open('job.sh', 'r') as f:
-    job_data = f.read()
+def find_git_dir(directory):
+    "Find the correct git dir; move upwards if .git folder is not found here"
+    absdir = os.path.abspath(directory)
+    gitdir = os.path.join(absdir, ".git")
+    if os.path.isdir(gitdir):
+        return gitdir
+    parentdir = os.path.dirname(absdir)
+    if absdir == parentdir:
+        # We reached root and found no gitdir
+#        logger.warning("No git dir found")
+        print('No git dir found')
 
-with open('job_restart.sh', 'r') as f:
-    job_restart_data = f.read()
+        return None
+    return find_git_dir(parentdir)
+
+git_top_dir = find_git_dir('.')[:-5]
+#print(git_top_dir)
+
+
+# System = niagara, rusty
+# data_dir = Folder with all of the data for
+#            running the simulation. Need to
+#            link these files
+# ics_file = The HDF5 file with the ICs.
+parser = ap.ArgumentParser()
+parser.add_argument("system")
+#parser.add_argument("data_dir")
+parser.add_argument("ics_file")
+args = parser.parse_args()
+
+
+#print(str(os.system('git rev-parse --show-toplevel')))
+#data_dir = './../data'
+#data_dir = '/scratch/b/babul/aspadawe/swift_tests/cali_simba/src/swiftcalibration/data'
+#data_dir = os.path.join(str(os.system('git rev-parse --show-toplevel')), 'data')
+#data_dir = os.path.join(str(os.system('git rev-parse --path-format=relative --no-flags --flags --quiet --show-toplevel'))[:], 'data')
+data_dir = os.path.join(git_top_dir, 'data')
+#print(data_dir)
+files_to_link = ["swift",
+                 "yieldtables",
+                 "photometry",
+                 "output_list_cali.txt",
+                 "chem5_tables",
+                 "CloudyData_UVB=HM2012_shielded.h5"]#,
+#                 args.ics_file]
+
+
 
 parameter_files = [Path(x) for x in glob("./original_ymls/*.yml")]
 parameter_filenames = {filename.stem: filename for filename in parameter_files}
@@ -22,31 +62,21 @@ cali_dir = './calibrations'
 if not os.path.isdir(cali_dir):
     os.makedirs(cali_dir, mode = 0o755, exist_ok = True)
 
-new_jobs = []
-new_jobs_restart = []
 new_ymls = []
 for v,k in enumerate(parameter_filenames):
     cali_name = 'cali_%04d' % int(k)
     cali_path = os.path.join(cali_dir, cali_name)
     yml_file = 'cali_%04d.yml' % int(k)
-    job_file = 'job_%04d.sh' % int(k)
-    job_restart_file = 'job_restart_%04d.sh' % int(k)
 
     if os.path.isdir(cali_path):
         os.system('rm -rf %s' % cali_path)
     os.makedirs(cali_path, mode = 0o755, exist_ok = True)
 
+    os.system('ln -s %s %s/%s' % (args.ics_file, cali_path, 'ics_file.hdf5'))
     for file_to_link in files_to_link:
         os.system('ln -s %s/%s %s/%s' % (data_dir, file_to_link, cali_path, file_to_link))
 
-    new_jobs.append(job_data.replace('JOB_NAME', cali_name))
-    new_jobs[-1] = new_jobs[-1].replace('YML_FILE', yml_file)
-    with open(os.path.join(cali_path, job_file), 'w') as f:
-        f.write(new_jobs[-1])
-
-    new_jobs_restart.append(job_restart_data.replace('JOB_NAME', cali_name))
-    new_jobs_restart[-1] = new_jobs_restart[-1].replace('YML_FILE', yml_file)
-    with open(os.path.join(cali_path, job_restart_file), 'w') as f:
-        f.write(new_jobs_restart[-1])
-
     os.system('cp ./original_ymls/%d.yml %s' % (int(k), os.path.join(cali_path, yml_file)))
+
+
+os.system('python ./generate_jobs.py %s' % args.system)

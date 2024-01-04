@@ -1,4 +1,4 @@
-# Functions for generating observables from simulation data
+# Functions for generating observables from simulation (or any) data
 import numpy as np
 import pandas as pd
 from copy import copy, deepcopy

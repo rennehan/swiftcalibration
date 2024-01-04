@@ -34,7 +34,7 @@ model_parameters = latin.create_hypercube(
     number_of_samples=number_of_simulations,
 )
 
-base_parameter_file = "swimba_s25n256.yml"
+base_parameter_file = "swimba_s50n512_mpi.yml"
 
 output_path = "./original_ymls"
 
