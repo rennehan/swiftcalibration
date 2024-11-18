@@ -1,0 +1,10 @@
+calibrations/
+original_ymls/
+*.out
+src/
+chem5
+coolingtables
+photometry
+*.hdf5
+yieldtables
+CloudyData*

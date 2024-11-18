@@ -4,28 +4,31 @@ from swiftemulator.io.swift import write_parameter_files
 from swiftemulator import ModelSpecification
 
 spec = ModelSpecification(
-    number_of_parameters=4,
+    number_of_parameters=5,
     parameter_names=[
-        "SIMBAFeedback:FIRE_velocity_normalization",
-        "SIMBAFeedback:FIRE_eta_normalization",
-        "SIMBAAGN:torque_accretion_norm",
-        "SIMBAAGN:jet_mass_min_Msun"
+        "ObsidianAGN:torque_accretion_norm",
+        "ObsidianAGN:jet_velocity_km_s",
+        "ObsidianAGN:adaf_coupling",
+        "ObsidianAGN:adaf_kick_factor",
+        "ObsidianAGN:eddington_fraction_lower_boundary"
     ],
     parameter_printable_names=[
-        "$v_{a}$",
-        "$\eta_{0}$",
         "$\varepsilon_{\\rm torque}$",
-        "$\\log_{10}$ $M_{\\rm BH, lim}/M_{\\rm \odot}$"
+        "$v_{\\rm jet}$",
+        "$\varepsilon_{\\rm adaf}$",
+        "$f_{\\rm adaf,kick}$",
+        "$R_{\\rm lower}$"
     ],
     parameter_limits=[
-        [0.5, 5.0],
-        [5.0, 13.0],
-        [0.00001, 0.008],
-        [6.5, 8.0]
+        [0.001, 0.1],
+        [2500, 10000],
+        [0.00001, 0.01],
+        [0., 1.],
+        [0.01, 0.2]
     ],
 )
 
-parameter_transforms = {"SIMBAAGN:jet_mass_min_Msun": lambda x: 10.0 ** x}
+parameter_transforms = {}
 
 number_of_simulations = 32
 
@@ -34,7 +37,7 @@ model_parameters = latin.create_hypercube(
     number_of_samples=number_of_simulations,
 )
 
-base_parameter_file = "swimba_s50n512_mpi.yml"
+base_parameter_file = "swimba_s37n256.yml"
 
 output_path = "./original_ymls"
 
