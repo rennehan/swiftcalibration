@@ -19,7 +19,7 @@ Calibrate Swift
 
 - The jupyter notebook "gen_obs_data.ipynb" can be used to produce velociraptor hdf5 files of observational data, which can be stored wherever desired.
 
-- You can then open the jupyter notebook "gen_swift_emulator.ipynb", and run through all the cells to generate a different emulator for each observable.
+- You can then open the jupyter notebook "gen_swift_emulator.ipynb", and run through all the cells to generate and save a different emulator for each observable.
 
 - Finally, the jupyter notebook "swift_emulator_joint_mcmc.ipynb" is used to find the best of the calibration simulations, and then use the emulators for each observable jointly in an MCMC to find the overall best-fit parameters.
 
