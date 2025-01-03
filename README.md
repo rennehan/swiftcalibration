@@ -1,7 +1,9 @@
 # swiftcalibration
-Calibrate Swift
+Calibrate Swift-based simulations.
 
 # Instructions for use
+
+First, clone this repository.
 
 ## Creating calibration simulations
 - Create a python environment using one of the requirements.txt files. Activate it.
