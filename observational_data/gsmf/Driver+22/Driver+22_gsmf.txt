@@ -1,0 +1,29 @@
+# Driver et al, 2023 galaxy stellar mass number-density distributions
+# for full sample of GAMA at z<0.1 (Table 6, columns 1 and 2)
+# Values do not include renormalization to SDSS or correction to redshift zero
+# (To apply corrections, add 0.0807 dex to all number-density values)
+log10(Mstar/Msun*h70^-2)	log10(Phi/dex/Mpc^3*h70^-3)	sigma_log10(Phi/dex/Mpc^3*h70^-3)
+11.875	nan	nan
+11.625	-4.704	0.138
+11.375	-3.414	0.032
+11.125	-2.922	0.019
+10.875	-2.561	0.013
+10.625	-2.361	0.010
+10.375	-2.292	0.009
+10.125	-2.274	0.009
+9.875	-2.219	0.009
+9.625	-2.142	0.010
+9.375	-2.055	0.014
+9.125	-1.886	0.020
+8.875	-1.795	0.024
+8.625	-1.688	0.032
+8.375	-1.669	0.045
+8.125	-1.544	0.071
+7.875	-1.287	0.079
+7.625	-1.349	0.092
+7.375	-1.011	0.071
+7.125	-1.084	0.125
+6.875	-0.691	0.176
+6.625	nan	nan
+6.375	0.202	0.176
+6.125	nan	nan

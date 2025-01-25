@@ -1,0 +1,13 @@
+import yt
+import numpy as np
+import pyxsim
+import soxs
+
+
+arf = soxs.AuxiliaryResponseFile.from_instrument(f"{instr}")
+ebins = np.linspace(arf.elo[0], arf.ehi[-1], arf.elo.size+1)
+
+counts, _ = np.histogram(e, ebins)
+
+
+    

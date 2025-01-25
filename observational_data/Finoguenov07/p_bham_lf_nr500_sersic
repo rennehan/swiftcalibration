@@ -1,0 +1,424 @@
+p_bham_lf_nr500_sersic
+      location 6000 30000 6000 30000
+      notation -4 4 -4 4
+      define expand_d 1.
+      define default_color black
+      ctype $default_color
+ ### for color printing, set to black
+      define grey_color yellow
+      define grey_lw 25
+      ### for color printing, set to yellow/cyan and 15
+      lw 0
+      ltype 0
+      expand 1.
+      ctype black
+      angle 0
+      lw 2
+      limits -2.1 0.04   -11.7 -8.9
+      ticksize -1 5 -1 10
+      lw 2
+      expand 1.6
+      box 1 2 0 0
+      expand 2.0
+      lw 2
+      ylabel \it P kT_{10 keV}^{-1.5} \ \ dyne cm^{-2}
+      xlabel \it R, r_{500}
+      lw 0
+      expand 1.
+
+      set dimen(p)=400
+      set dimen(p1)=400
+      set dimen(p2)=400
+      set dimen(p3)=400
+      set dimen(r)=400
+
+      do i=0,399{
+        set r[$i]=0.005*$i
+ #        set p[$i]=3.e-12*exp(-(2*2-0.324)*((r[$i]**(1./2.)-1)))
+ #        set p1[$i]=3.e-12*exp(-(2*3-0.324)*((r[$i]**(1./3.)-1)))
+         set p2[$i]=4.e-12*exp(-(2*4.-0.324)*((r[$i]**(1./4.)-1)))
+ #        set p3[$i]=3.e-12*exp(-(2*5-0.324)*((r[$i]**(1./5.)-1)))
+        }
+
+ #        conn  (lg(r)) (lg(p)) 0 5 cyan
+ #        conn  (lg(r)) (lg(p1)) 1 5 cyan
+         conn  (lg(r)) (lg(p2)) 0 15 yellow
+ #        conn  (lg(r)) (lg(p3)) 3 5 cyan
+
+
+      define fname {"data/pressure_lg_lf"}
+      data $fname
+      lines 1 5000
+      read {x 1 p 2}
+      conn (lg(x)) (lg(1.1*p)) 2 4 black
+
+      define fname {"data/0002970101/odf/spe_annuli/log0530/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.464
+       set p=p/0.128**1.5
+      set pe=pe/0.128**1.5
+      expand 1.6
+      ptype 10 0
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0002970101/odf/spe_tireg2/log0530/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.464
+      set p=p/0.128**1.5
+      set pe=pe/0.128**1.5
+      expand 1.6
+      ptype 10 0
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0041180301/odf/spe_annuli/log0530b05120/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.339
+      set p=p/0.075**1.5
+      set pe=pe/0.075**1.5
+      expand 1.6
+      ptype 10 3
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0041180301/odf/spe_tireg2/log0530b05120/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.339
+      set p=p/0.075**1.5
+      set pe=pe/0.075**1.5
+      expand 1.6
+      ptype 10 3
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0112270301/odf/spe_annuli/log0530b05120/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.436
+      set p=p/0.116**1.5
+      set pe=pe/0.116**1.5
+      expand 1.6
+      ptype 3 0
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0112270301/odf/spe_tireg2/log0530b05120/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.436
+      set p=p/0.116**1.5
+      set pe=pe/0.116**1.5
+      expand 1.6
+      ptype 3 0
+      points (lg(x11)) (lg(p))
+
+
+      define fname {"data/0112270701/odf/spe_annuli/log0530/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.415
+      set p=p/0.106**1.5
+      set pe=pe/0.106**1.5
+      expand 1.6
+      ptype 3 3
+      points (lg(x11)) (lg(p))
+
+
+      define fname {"data/0112270701/odf/spe_tireg2/log0530/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.415
+      set p=p/0.106**1.5
+      set pe=pe/0.106**1.5
+      expand 1.6
+      ptype 3 3
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0093060101/odf/spe_annuli/log0530/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.579
+      set p=p/0.187**1.5
+      set pe=pe/0.187**1.5
+      expand 1.6
+      ptype 4 0
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0093060101/odf/spe_tireg2/log0530/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.579
+      set p=p/0.187**1.5
+      set pe=pe/0.187**1.5
+      expand 1.6
+      ptype 4 0
+      points (lg(x11)) (lg(p))
+
+
+
+      define fname {"data/0108860501/odf/spe_annuli/log0530b05120/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.471
+      set p=p/0.131**1.5
+      set pe=pe/0.131**1.5
+      expand 1.6
+      ptype 4 3
+      points (lg(x11)) (lg(p))
+
+
+      define fname {"data/0108860501/odf/spe_tireg2/log0530b05120/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.471
+      set p=p/0.131**1.5
+      set pe=pe/0.131**1.5
+      expand 1.6
+      ptype 4 3
+      points (lg(x11)) (lg(p))
+
+
+      define fname {"data/0108860101/odf/spe_annuli/log0530/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.402
+      set p=p/0.101**1.5
+      set pe=pe/0.101**1.5
+      expand 2
+      ptype 10 3
+      ctype green
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0108860101/odf/spe_tireg2/log0530/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.402
+      set p=p/0.101**1.5
+      set pe=pe/0.101**1.5
+      expand 2
+      ptype 10 3
+      ctype green
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0080540101/odf/spe_annuli/log0530/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.477
+      set p=p/0.134**1.5
+      set pe=pe/0.134**1.5
+      expand 2
+      ptype 3 3
+      points (lg(x11)) (lg(p))
+
+
+      define fname {"data/0080540101/odf/spe_tireg2/log0530/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.477
+      set p=p/0.134**1.5
+      set pe=pe/0.134**1.5
+      expand 2
+      ptype 3 3
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0041180801/odf/spe_annuli/log0530b03120/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.447
+      set p=p/0.121**1.5
+      set pe=pe/0.121**1.5
+      expand 2
+      ptype 4 3
+      points (lg(x11)) (lg(p))
+
+
+      define fname {"data/0041180801/odf/spe_tireg2/log0530b03120/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.447
+      set p=p/0.121**1.5
+      set pe=pe/0.121**1.5
+      expand 2
+      ptype 4 3
+      points (lg(x11)) (lg(p))
+
+
+      define fname {"data/0109860101/odf/spe_annuli/log0530b05120/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.459
+      set p=p/0.126**1.5
+      set pe=pe/0.126**1.5
+      expand 2
+      ptype 10 0
+      points (lg(x11)) (lg(p))
+
+
+      define fname {"data/0109860101/odf/spe_tireg2/log0530b05120/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.459
+      set p=p/0.126**1.5
+      set pe=pe/0.126**1.5
+      expand 2
+      ptype 10 0
+      points (lg(x11)) (lg(p))
+
+      define fname {"data/0022340101/odf/spe_annuli/log0530b05120/annuli.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.344
+      set p=p/0.077**1.5
+      set pe=pe/0.077**1.5
+      expand 2
+      ptype 3 0
+      points (lg(x11)) (lg(p))
+
+
+      define fname {"data/0022340101/odf/spe_tireg2/log0530b05120/tireg2.res3d"}
+      data $fname
+      lines 1 150
+      read {ent 9 ente 10 p 11 pe 12 r11 13  r12 14}
+
+      set x11=(r12+r11)/2.
+      set dxp=lg(r12)-lg(x11)
+      set dxm=lg(x11)-lg(r11)
+      set x11=x11/0.344
+      set p=p/0.077**1.5
+      set pe=pe/0.077**1.5
+      expand 2
+      ptype 3 0
+      points (lg(x11)) (lg(p))
+
+ #      set dimen(p)=400
+ #      set dimen(r)=400
+ #
+ #      do i=0,399{
+ #        set r[$i]=0.005*$i
+ #        set p[$i]=1.e-9/1.5*(1+(r[$i]/0.05)**2)**-1
+ #        }
+ #
+ #       conn  (lg(r)) (lg(p)) 2 5 black
+ #        ctype black
+       lw 2
+      ctype black
+      lw 2
+      expand 1
+      relocate -1.9842  -9.06952 label \it \alpha=-0.82
+      relocate -0.25 -11.3002 label \it \alpha=-1.47
+      expand 1.6
+
+      box 1 2 0 0
+
+
+
+ #;;; Local Variables: ***
+ #;;; mode: fortran ***
+ #;;; fortran-comment-region: " \#" ***
+ #;;; End: ***
+

@@ -1,0 +1,29 @@
+
+N1550_Z_3d --- 3d abundance profile
+------------------------
+ Column 1: effective radius (kpc)
+        2: uncertainty of effective radius (check Sun+09)
+        3: Z_3d
+        4: upper error for Z_3d
+        5: lower error for Z_3d
+
+note that Sun+09 and papers before ~ 2011-2012 all used AtomDB 1.3.1 or early version.
+With the current AtomDB, the Z values change by 10-15% --- I assume you already know it.
+------------------------
+
+sur_fi --- surface brightness profile for ACIS FI chip data
+------------------------
+ Column 1: center of the bin (kpc)
+        2: lower bound
+        3: upper bound
+         note that Sun+09 further used sub-bins with each S_X bin to mitigate the binsize effect
+        4: surface brightness in counts/sec/kpc^2
+        5: error
+
+note that Sun+09 assumed H0 = 73, (0.24, 0.76) cosmology
+------------------------
+
+sur_bi --- surface brightness profile for ACIS BI chip data
+
+
+Aimpoint response for BI and FI data are also provided.
