@@ -2,13 +2,6 @@ import os
 import numpy as np
 from glob import glob
 from pathlib import Path
-import argparse as ap
-
-# System = niagara, rusty
-parser = ap.ArgumentParser()
-parser.add_argument("system")
-args = parser.parse_args()
-
 
 with open('job.sh', 'r') as f:
     job_data = f.read()

@@ -1,7 +1,9 @@
 # swiftcalibration
-Calibrate Swift
+Calibrate Swift-based simulations.
 
 # Instructions for use
+
+First, clone this repository.
 
 ## Creating calibration simulations
 - Create a python environment using one of the requirements.txt files. Activate it.
@@ -19,8 +21,8 @@ Calibrate Swift
 
 - The jupyter notebook "gen_obs_data.ipynb" can be used to produce velociraptor hdf5 files of observational data, which can be stored wherever desired.
 
-- You can then open the jupyter notebook "gen_swift_emulator.ipynb", and run through all the cells to generate a different emulator for each observable.
+- You can then open the jupyter notebook "gen_swift_emulator.ipynb", and run through all the cells to generate and save a different emulator for each observable.
 
-- Finally, the jupyter notebook "swift_emulator_join_mcmc.ipynb" is used to find the best of the calibration simulations, and then use the emulators for each observable jointly in an MCMC to find the overall best-fit parameters.
+- Finally, the jupyter notebook "swift_emulator_joint_mcmc.ipynb" is used to find the best of the calibration simulations, and then use the emulators for each observable jointly in an MCMC to find the overall best-fit parameters.
 
 - If desired, a single full simulation can be run with these best-fit parameters, and then scripts/gen_sim_data.ipynb can be used to look at the observables of that simulation.

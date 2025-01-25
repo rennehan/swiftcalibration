@@ -23,34 +23,23 @@ def find_git_dir(directory):
     return find_git_dir(parentdir)
 
 git_top_dir = find_git_dir('.')[:-5]
-#print(git_top_dir)
 
 
-# System = niagara, rusty
-# data_dir = Folder with all of the data for
-#            running the simulation. Need to
-#            link these files
 # ics_file = The HDF5 file with the ICs.
 parser = ap.ArgumentParser()
-parser.add_argument("system")
-#parser.add_argument("data_dir")
 parser.add_argument("ics_file")
 args = parser.parse_args()
 
 
-#print(str(os.system('git rev-parse --show-toplevel')))
-#data_dir = './../data'
-#data_dir = '/scratch/b/babul/aspadawe/swift_tests/cali_simba/src/swiftcalibration/data'
-#data_dir = os.path.join(str(os.system('git rev-parse --show-toplevel')), 'data')
-#data_dir = os.path.join(str(os.system('git rev-parse --path-format=relative --no-flags --flags --quiet --show-toplevel'))[:], 'data')
-data_dir = os.path.join(git_top_dir, 'data')
-#print(data_dir)
-files_to_link = ["swift",
-                 "yieldtables",
+data_dir = '../../../data'
+print(data_dir)
+
+files_to_link = ["yieldtables",
                  "photometry",
                  "output_list_cali.txt",
-                 "chem5_tables",
-                 "CloudyData_UVB=HM2012_shielded.h5"]#,
+                 "chem5",
+                 "coolingtables",
+                 "CloudyData_UVB=FG2011_shielded.h5"]#,
 #                 args.ics_file]
 
 
@@ -71,12 +60,17 @@ for v,k in enumerate(parameter_filenames):
     if os.path.isdir(cali_path):
         os.system('rm -rf %s' % cali_path)
     os.makedirs(cali_path, mode = 0o755, exist_ok = True)
+    os.makedirs('%s/src' % cali_path, mode = 0o755, exist_ok = True)
+    os.system('rsync -av ~/src/swiftsim/* %s/src/' % cali_path)
+    os.makedirs('%s/src/.git' % cali_path, mode = 0o755, exist_ok = True)
+    os.system('rsync -av ~/src/swiftsim/.git/* %s/src/.git/' % cali_path)
+    os.system('ln -s `pwd`/%s/src/swift %s/swift' % (cali_path, cali_path))
 
-    os.system('ln -s %s %s/%s' % (args.ics_file, cali_path, 'ics_file.hdf5'))
+    os.system('ln -s %s/%s %s/%s' % (data_dir, args.ics_file, cali_path, 'ics_file.hdf5'))
     for file_to_link in files_to_link:
         os.system('ln -s %s/%s %s/%s' % (data_dir, file_to_link, cali_path, file_to_link))
 
     os.system('cp ./original_ymls/%d.yml %s' % (int(k), os.path.join(cali_path, yml_file)))
 
 
-os.system('python ./generate_jobs.py %s' % args.system)
+os.system('python ./generate_jobs.py')

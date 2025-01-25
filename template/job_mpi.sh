@@ -1,22 +1,38 @@
 #!/bin/bash -l
 #########################################################
-#SBATCH -J JOB_NAME_mpi
-#SBATCH --mail-user=apadawer@uvic.ca
-#SBATCH --mail-type=FAIL
-#SBATCH --account=rrg-babul-ad
+#SBATCH -J JOB_NAME
+#SBATCH -p cca
+#SBATCH --mail-user=drennehan@flatironinstitute.org
+#SBATCH --mail-type=FAIL 
+#SBATCH -C rome
 #SBATCH -o ./slurm-%j.out
 #########################################################
-#SBATCH --time=24:0:0
-#SBATCH --nodes=2
-#SBATCH --ntasks-per-node=2
-#SBATCH --cpus-per-task=20
+#SBATCH --time=72:0:0
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=64
 #########################################################
 
-## Each Niagara node has 2 sockets (NUMA regions/chips) each with 20 cores --> so 2 tasks per node, and 20 cpus per task, and a total of np=2*8=16 processes
-## This gives a total of 16*20=320 core processors for the simulation
+module purge
+module load modules/2.3-20240529
+module load openblas/single-0.3.26
+module load gcc/11.4.0
+module load openmpi/4.0.7
+module load hdf5/1.12.3
+module load gsl/2.7.1
+module load fftw/mpi-3.3.10
 
-module load NiaEnv/.2022a intel/2022u2 intelmpi/2022u2+ucx-1.11.2 hdf5/1.10.9 fftw/3.3.10 gsl/2.7 parmetis/4.0.3-shared autotools
+cd src
+GRACKLE_LOCAL=/mnt/home/rdave/grackle
+DOUG_LOCAL=/mnt/home/drennehan/local
 
-mpirun -np 4 ./swift --pin --cosmology --simba --threads=20 YML_FILE
+make -j dist clean
+make -j clean
+./autogen.sh
+CC=mpicc ./configure --enable-mpi --enable-mpi-mesh-gravity --with-subgrid=KIARA --with-hdf5=`which h5cc` --with-grackle=${GRACKLE_LOCAL} --with-parmetis=${DOUG_LOCAL}
+make -j
+cd ..
+
+mpirun -np ${SLURM_NTASKS} ./swift --pin --cosmology --simba --threads=${SLURM_CPUS_PER_TASK}  YML_FILE
 
 #########################################################
