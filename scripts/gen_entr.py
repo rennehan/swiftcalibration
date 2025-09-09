@@ -5,6 +5,7 @@ import yt
 import unyt
 import numpy as np
 import caesar
+import glob
 
 from unyt import unyt_quantity, unyt_array, km, s, Mpc, kg, m, Msun, kpc
 from unyt.physical_constants import G, kboltz, mp
@@ -15,24 +16,19 @@ import astropy.units as u
 
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--modeldir')
-parser.add_argument('--simdir')
-parser.add_argument('--sim', type=str)
-parser.add_argument('--targethalo', type=int)
-args = parser.parse_args()
+# Parse arguments
 
-MODELDIR = args.modeldir
-SIMDIR = args.simdir
-SIM = args.sim
-HALO = args.targethalo
+MODELDIR = # Base model directory
+SIMDIR = # Simulation subdirectory containing run folders (ie. run01, run02, run03, etc...)
+SIM = # Simulation file prefix
+HALO = # Target halo CAESAR index
 
 SNAPLIST = [151]
 
 # Define common log-r bins globally so all runs use the same binning
 common_log_r_bins = np.linspace(-4, np.log10(5), 30)  # log(R/R500)
 
-def gen_observable(SNAPLIST, SNAPDIR, SIM):
+def gen_observable(SNAPLIST, SNAPDIR, SIM, run_name):
     for j in SNAPLIST:
         SNAP = os.path.join(SNAPDIR, f'{SIM}_{j:03d}.hdf5')
         CAESARFILE = os.path.join(SNAPDIR, f'{SIM}_caesar_{j:03d}.hdf5')
@@ -151,7 +147,7 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
         }
 
         for key, val in save_data.items():
-            output_filename = f"{SIM}_{j:03d}_entropy_profile_common.hdf5"
+            output_filename = f"{run_name}_{SIM}_{j:03d}_entropy_profile_common.hdf5"
             x = val['x'] * unyt.dimensionless
             xerr = val['xerr'] * unyt.dimensionless
             y = val['y'] * unyt.dimensionless
@@ -172,7 +168,34 @@ def gen_observable(SNAPLIST, SNAPDIR, SIM):
                 os.remove(output_path)
 
             processed.write(filename=output_path)
-            
+
+def looper():
+    base_path = os.path.join(MODELDIR, SIMDIR)
+    
+    # Find all run directories
+    run_pattern = os.path.join(base_path, "run*")
+    run_dirs = glob.glob(run_pattern)
+    
+    if not run_dirs:
+        print(f"No run directories found in {base_path}")
+        return
+    
+    # Sort the directories to ensure consistent ordering
+    run_dirs.sort()
+    
+    print(f"Found {len(run_dirs)} run directories")
+    
+    # Process each run directory
+    for run_dir in run_dirs:
+        run_name = os.path.basename(run_dir)
+        print(f"Processing {run_name}...")
+        
+        try:
+            gen_observable(SNAPLIST, run_dir, SIM, run_name)
+        except Exception as e:
+            print(f"Error processing {run_name}: {str(e)}")
+            continue
+    
     print("\nDONE\n")
 
-gen_observable(SNAPLIST, os.path.join(MODELDIR, SIMDIR), SIM)
+looper()
