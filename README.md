@@ -1,28 +1,21 @@
 # swiftcalibration
-Calibrate Swift-based simulations.
+Modified to calibrate GIZMO-based simulations, specifically for entropy data.
 
 # Instructions for use
 
 First, clone this repository.
 
-## Creating calibration simulations
-- Create a python environment using one of the requirements.txt files. Activate it.
+## Step-by-Step Walkthrough
 
-- Copy required simulation files to the "data" directory (you can remove whatever is not necessary for you already in there). Make sure to write the names of these files in the files_to_link list in "template/generate_calibrations.py".
+- For GIZMO simulations, run the parameter file from the simulation through "paramfile\_tex\_to\_yml.py", which will convert it from .tex to .yml format. Within this script, change the input\_tex\_filepath and output\_yml\_filepath to your desired filepaths.
+  
+- Run the "gen\_entr.py" script, with your desired filepaths inserted. The script will loop through all your simulated runs and generate entropy profile .hdf5 files, which will be used to train the emulator.
+  
+- You can then open the jupyter notebook "gen\_swift\_emulator.ipynb", and run through all the cells to generate and save a different emulator for each observable.
+  
+- Now, run "gen\_entr\_observational.py" to create an .hdf5 file for observational entropy profiles. You will need to input a mass range and an observational catalog (ACCEPT, CLoGS, or Sun+2009) to take data from.
+    ~ If your simulation halo is ~M500 = 13, then it would be logical to pick an observational mass range of about 12.8-13.2.
+  
+- Use the observational entropy profile file you've created along with the trained emulator (.pkl file) and your snapshot information to run through the run through the jupyter notebook "swift\_emulator\_joint\_mcmc.ipynb". This notebook is used to find the best of the calibration simulations, and then use the emulators for each observable jointly in an MCMC to find the overall best-fit parameters. 
 
-- Alter "template/design.py" to include desired parameters to calibrate, their ranges, their printable names, whether they should be sampled in log space, how many simulations you would like to run (32 tends to be good), and the base parameter file you are using (which must be compatible with the swift executable you are using)
-
-- cd to "template", run "python design.py" and then "python generate_calibrations.py <system_name> </path/to/initial_conditions_file>".
-
-- Run "python submit_calibrations_auto.py" if you want the simulations to restart if they fail; if not, run "python submit_calibrations.py" first and then "python submit_calibrations_restart.py" subsequent times after they fail or hit their wall time.
-
-## Performing Calibration
-- There are scripts for generating caesar files and some basic observables in "scripts", which can all be run together by submitting the job script "job_gen_observables.sh". This will produce velociraptor hdf5 files for the observables in each calibration's directory.
-
-- The jupyter notebook "gen_obs_data.ipynb" can be used to produce velociraptor hdf5 files of observational data, which can be stored wherever desired.
-
-- You can then open the jupyter notebook "gen_swift_emulator.ipynb", and run through all the cells to generate and save a different emulator for each observable.
-
-- Finally, the jupyter notebook "swift_emulator_joint_mcmc.ipynb" is used to find the best of the calibration simulations, and then use the emulators for each observable jointly in an MCMC to find the overall best-fit parameters.
-
-- If desired, a single full simulation can be run with these best-fit parameters, and then scripts/gen_sim_data.ipynb can be used to look at the observables of that simulation.
+Email spencerlockwood@uvic.ca for any questions
