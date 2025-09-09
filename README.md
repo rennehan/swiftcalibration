@@ -5,7 +5,7 @@ Modified to calibrate GIZMO-based simulations, specifically for entropy data.
 
 First, clone this repository.
 
-## Step-by-Step Walkthrough
+## General Walkthrough
 
 - For GIZMO simulations, run the parameter file from the simulation through "paramfile\_tex\_to\_yml.py", which will convert it from .tex to .yml format. Within this script, change the input\_tex\_filepath and output\_yml\_filepath to your desired filepaths.
   
