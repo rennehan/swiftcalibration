@@ -1,4 +1,4 @@
-# swiftcalibration
+# swiftcalibration (or gizmocalibration, in this case)
 Modified to calibrate GIZMO-based simulations, specifically for entropy data.
 
 # Instructions for use
