@@ -12,9 +12,9 @@ import argparse
 ##########################################################################################################################
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--modeldir')
-parser.add_argument('--simdir')
-parser.add_argument('--sim', type=str)
+parser.add_argument('--modeldir') # eg N32L256 or similar
+parser.add_argument('--simdir') # simulation filepath
+parser.add_argument('--sim', type=str) # simulation name
 args = parser.parse_args()
 
 MODELDIR = args.modeldir
@@ -24,7 +24,7 @@ SIM = args.sim
 
 ## Need to set this in here
 # SNAPLIST = list(range(0,16))
-SNAPLIST = [15]
+SNAPLIST = [39]
 
 print (SNAPLIST)
 

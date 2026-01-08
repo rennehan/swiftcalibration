@@ -143,4 +143,8 @@ wheel                     0.45.1
 widgetsnbextension        4.0.13
 xarray                    2025.1.2
 xarray-einstats           0.8.0
+<<<<<<< HEAD
 yt                        4.1.dev0
+=======
+yt                        4.1.dev0
+>>>>>>> spencer_dev
