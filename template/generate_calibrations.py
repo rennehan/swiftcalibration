@@ -8,6 +8,9 @@ import argparse
 #logger = logging.getLogger(__name__)
 
 
+print("\nGenerating calibrations...\n")
+
+
 ## Command line keyword arguments
 # parser = argparse.ArgumentParser(description="Generate calibrations.")
 # # parser.add_argument('--code_dir', action='store', type=str, required=True, 
@@ -24,42 +27,20 @@ import argparse
 
 
 
-output_dir = '/scratch/aspadawe/snapshots/HyenasC/L1/SimbaC_L1_Calibration/halo_2205-correct_jet-calibrations/128_sims-6_params/'
-cali_dir = '/scratch/aspadawe/sims/HyenasC/L1/SimbaC_L1_Calibration/trillium/gizmo-hyenasc-l1-correct_jet-vary_params/cali_params/128_sims-6_params/'
-param_type = 'tex'
-ics_file = '/project/rrg-babul-ad/wcui/HYENAS/ICs/level1/halo_2205'
-
-# def find_git_dir(directory):
-#     "Find the correct git dir; move upwards if .git folder is not found here"
-#     absdir = os.path.abspath(directory)
-#     gitdir = os.path.join(absdir, ".git")
-#     if os.path.isdir(gitdir):
-#         return gitdir
-#     parentdir = os.path.dirname(absdir)
-#     if absdir == parentdir:
-#         # We reached root and found no gitdir
-# #        logger.warning("No git dir found")
-#         print('No git dir found')
-
-#         return None
-#     return find_git_dir(parentdir)
-
-# git_top_dir = find_git_dir('.')[:-5]
+## Specify paths and parameters for generating calibrations; modify as needed for your calibration parameters and model
+output_dir = '/path/to/output/calibration/directory/'  # directory where calibration output subdirectories will be written
+cali_dir = '/path/to/calibration/parameter/files/'  # same as output_dir in design_calibrations.py
+param_type = 'tex'  # type of parameter file to use for calibration (yml or tex)
+model_info_filename = 'model_info.pkl'  # same as model_info_filename in design_calibrations.py
 
 
-# ics_file = The HDF5 file with the ICs.
-# parser = argparse.ArgumentParser()
-# parser.add_argument("ics_file")
-# args = parser.parse_args()
-
-
-# data_dir = '../../../data'
-# print(data_dir)
-
+## Define files to link into each calibration subdirectory
+## Currently for gizmo-simba-hyenasc; modify as needed for your calibration parameters and model
+ics_file = '/path/to/initial/conditions/file'
 files_to_link = {
-    'GIZMO_EXE': '/scratch/aspadawe/sims/HyenasC/L1/SimbaC_L1_Calibration/trillium/gizmo-hyenasc-l1-correct_jet-vary_params/GIZMO_EXE',
-    'ics_file': ics_file,
-    'param_files': '/scratch/aspadawe/sims/HyenasC/L1/SimbaC_L1_Calibration/trillium/gizmo-hyenasc-l1-correct_jet-vary_params/param_files/',
+    'GIZMO_EXE':'/path/to/gizmo/executable',
+    'ics_file':ics_file,
+    'param_files':'/scratch/aspadawe/sims/HyenasC/L1/SimbaC_L1_Calibration/trillium/gizmo-hyenasc-l1-correct_jet-vary_params/param_files/',
 }
 
 # required_files = [Path(x) for x in glob(f'/scratch/aspadawe/snapshots/required_files/*')]
@@ -68,71 +49,74 @@ for file in required_files:
     # files_to_link[file.stem] = file
     files_to_link[file.split('/')[-1]] = file
 
-print()
+print("\tWill link the following files into each calibration subdirectory:")
 print(files_to_link)
-print()
-
-# files_to_link = ['/scratch/aspadawe/sims/HyenasC/L1/SimbaC_L1_Calibration/trillium/gizmo-hyenasc-l1-correct_jet-vary_params/GIZMO_EXE',
-#                  '/scratch/aspadawe/sims/HyenasC/L1/SimbaC_L1_Calibration/trillium/gizmo-hyenasc-l1-correct_jet-vary_params/param_files/',
-#                  '/scratch/aspadawe/snapshots/required_files/*',]
-# files_to_link = ["yieldtables",
-#                  "photometry",
-#                  "output_list_cali.txt",
-#                  "chem5",
-#                  "coolingtables",
-#                  "CloudyData_UVB=FG2011_shielded.h5",
-#                  "snapshot_BAL_0001.hdf5",
-#                  "snapshot_BAL_0002.hdf5",
-#                  "snapshot_BAL_0003.hdf5",
-#                  "snapshot_BAL_0004.hdf5",
-#                  "snapshot_BAL_0005.hdf5",
-#                  "snapshot_BAL_0006.hdf5",
-#                  "snapshot_BAL_0007.hdf5",
-#                  "snapshot_BAL_0008.hdf5",
-#                  "snapshot_BAL_0009.hdf5",
-#                  "snapshot_BAL_0010.hdf5",
-#                  ]#,
-#                 args.ics_file]
 
 
-
-# parameter_files = [Path(x) for x in glob("./original_ymls/*.yml")]
-parameter_files = [Path(x) for x in glob(f"{cali_dir}/*.{param_type}")]
-parameter_filenames = {filename.stem: filename for filename in parameter_files}
-
-# cali_dir = './calibrations'
+## Check if output directory exists; if not, create it
 if not os.path.isdir(output_dir):
+    print(f"\tOutput directory {output_dir} does not exist; creating it.")
     os.makedirs(output_dir, mode = 0o755, exist_ok = True)
 
+
+## Copy model_info file to output directory
+print(f"\tCopying model information file {model_info_filename} to output directory {output_dir}...")
+os.system(f'cp -rf {os.path.join(cali_dir, model_info_filename)} {os.path.join(output_dir, model_info_filename)}')
+
+
+## Find parameter files in cali_dir with specified type (yml or tex) and generate calibration setups for each parameter file
+# parameter_files = [Path(x) for x in glob("./original_ymls/*.yml")]
+# parameter_files = [Path(x) for x in glob(f"{cali_dir}/*.{param_type}")]
+# parameter_files = [Path(x) for x in glob(os.path.join(cali_dir, f"cali_*.{param_type}"))]  # look for parameter files in cali_dir with format cali_*.yml or cali_*.tex
+parameter_files = [Path(x) for x in glob(os.path.join(cali_dir, f"*.{param_type}"))]  # look for parameter files in cali_dir with format *.yml or *.tex
+parameter_filenames = {filename.stem:filename for filename in parameter_files}
+print(f"\tFound {len(parameter_files)} parameter files in {cali_dir} with type {param_type}")
+
+cali_dict = {
+    cali:{
+        'cali_dir':cali_path,
+        'param_file':f'params.{param_type}',
+    } 
+    for cali, cali_path in parameter_filenames.items()
+}
+
 # new_paramfiles = []
-for v,k in enumerate(parameter_filenames):
-    # cali_name = 'cali_%04d' % int(k)
-    cali_name = f'cali_{int(k):04d}'
-    cali_path = os.path.join(output_dir, cali_name)
-    # param_file = 'cali_%04d.%s' % (int(k), args.param_type)
-    param_file = f'cali_{int(k):04d}.{param_type}'
+print(f"\tGenerating calibration setups for each parameter file...")
+for i, (cali_num, cali_input_path) in enumerate(parameter_filenames.items()):
+    cali_name = f'cali_{int(cali_num):04d}'
+    cali_output_path = os.path.join(output_dir, cali_name)
 
-    if os.path.isdir(cali_path):
-        # os.system('rm -rf %s' % cali_path)
-        os.system(f'rm -rf {cali_path}')
-    os.makedirs(cali_path, mode = 0o755, exist_ok = True)
-    os.makedirs(os.path.join(cali_path, 'slurm_files'), mode = 0o755, exist_ok = True)
+    cali_yml_input_path = os.path.join(cali_dir, f'{cali_num}.yml')
 
-    # os.system(f'ln -s ')
+    ## Set parameter file name for calibration; e.g. cali_0001.tex, cali_0001.yml,
+    ## or just params.tex or params.yml if you want the same parameter file name for each calibration
+    # param_file = f'{cali_name}.{param_type}'
+    # param_file = f'params.{param_type}'
+    param_file = 'params'
 
-    # os.makedirs('%s/src' % cali_path, mode = 0o755, exist_ok = True)
-    # os.system('rsync -av ~/src/swiftsim/* %s/src/' % cali_path)
-    # os.makedirs('%s/src/.git' % cali_path, mode = 0o755, exist_ok = True)
-    # os.system('rsync -av ~/src/swiftsim/.git/* %s/src/.git/' % cali_path)
-    # os.system('ln -s `pwd`/%s/src/swift %s/swift' % (cali_path, cali_path))
+    if os.path.isdir(cali_output_path):
+        print(f"\tCalibration output directory {cali_output_path} already exists; removing this calibration to create a new one.")
+        os.system(f'rm -rf {cali_output_path}')
+    os.makedirs(cali_output_path, mode = 0o755, exist_ok = True)
 
-    # os.system('ln -s %s/%s %s/%s' % (data_dir, args.ics_file, cali_path, 'ics_file.hdf5'))
+    ## Make subdirectory for output files, e.g. slurm files, if your setup uses slurm
+    os.makedirs(os.path.join(cali_output_path, 'slurm_files'), mode = 0o755, exist_ok = True)
 
+    ## Link required files into calibration subdirectory
+    # print(f"\tLinking required files into calibration subdirectory {cali_output_path}...")
     for file_name, file_to_link in files_to_link.items():
-        os.system(f'ln -s {file_to_link} {os.path.join(cali_path, file_name)}')
+        os.system(f'ln -s {file_to_link} {os.path.join(cali_output_path, file_name)}')
 
-    # os.system('cp -rf ./original_ymls/%d.yml %s' % (int(k), os.path.join(cali_path, yml_file)))
-    os.system(f'cp -rf {cali_dir}/{int(k):d}.{param_type} {os.path.join(cali_path, param_file)}')
+    ## Copy parameter file to calibration subdirectory
+    # os.system(f'cp -rf {cali_dir}/{int(cali_num):d}.{param_type} {os.path.join(cali_output_path, param_file)}')
+    os.system(f'cp -rf {cali_input_path} {os.path.join(cali_output_path, f"{param_file}.{param_type}")}')
+
+    ## If parameter file is not already in .yml format, copy the .yml version of the parameter file to the calibration subdirectory as well,
+    ## since this is what the swiftemulator functions need
+    if param_type.lower() != 'yml':
+        os.system(f'cp -rf {cali_yml_input_path} {os.path.join(cali_output_path, f"{param_file}.yml")}')
+
+    print(f"\tGenerated calibration setup {i+1}/{len(parameter_filenames)}: {cali_output_path}")
 
 
-# os.system('python ./generate_jobs.py')
+print("\nFinished generating calibrations.\n")

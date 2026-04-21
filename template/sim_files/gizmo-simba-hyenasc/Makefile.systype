@@ -1,0 +1,64 @@
+# Select Target Computer 
+#
+# Please copy this file to Makefile.systype and uncomment your
+# system. Don't commit changes to this file unless you add support for
+# a new system.
+#
+###########
+#
+# This file was originally part of the GADGET3 code developed by
+#   Volker Springel (volker.springel@h-its.org). 
+#
+#############
+
+#SYSTYPE="CedarOMPI2.1"
+#SYSTYPE="Niagara"
+
+###################
+## RT/RD SYSTEMS ##
+###################
+#SYSTYPE="RTOSX"
+#SYSTYPE="ELGATO-GNU"
+#SYSTYPE="ELGATO-INTEL"
+#SYSTYPE="TIMON-PUMBAA_GNU"
+#SYSTYPE="TIMON-PUMBAA_OPEN64"
+#SYSTYPE="linux"
+#SYSTYPE="ursa"
+#SYSTYPE="ursa-open64"
+#SYSTYPE="fock"
+#SYSTYPE="fockgnu"
+#SYSTYPE="hipergator-intel"
+#SYSTYPE="hipergator-gnu"
+#SYSTYPE="archer"
+#SYSTYPE="cosma-intel"
+#SYSTYPE="cosma-gnu"
+################
+
+#SYSTYPE="Niagara"
+SYSTYPE="Trillium"
+#SYSTYPE="Stampede"
+#SYSTYPE="Zwicky"
+#SYSTYPE="MacBookPro"
+#SYSTYPE="Quest"
+#SYSTYPE="odyssey"
+#SYSTYPE="SciNet"
+#SYSTYPE="Pleiades-Haswell"
+#SYSTYPE="Pleiades-SIBridge"
+#SYSTYPE="Ranger_intel"
+#SYSTYPE="Ranger_pgi"
+#SYSTYPE="Darwin"
+#SYSTYPE="Magny"
+#SYSTYPE="Magny-Intel"
+#SYSTYPE="OpenSuse"
+#SYSTYPE="OpenSuse64"
+#SYSTYPE="HLRB2"
+#SYSTYPE="MPA"	
+#SYSTYPE="VIP"
+#SYSTYPE="Ubuntu"
+#SYSTYPE="MBM"
+#SYSTYPE="OpteronMPA-Gnu"
+#SYSTYPE="OpteronMPA-Intel"
+#SYSTYPE="Centos5-intel"
+#SYSTYPE="Kolob"
+#SYSTYPE="Centos5-Gnu"
+#SYSTYPE="OPA-Cluster64-Intel"

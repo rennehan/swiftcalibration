@@ -1,0 +1,186 @@
+%-------------------------------------------------------------------------
+%----  This file contains the input parameters needed at run-time for 
+%       simulations. It is based on and closely resembles the GADGET-3
+%       parameterfile (format of which and parsing routines written by 
+%       Volker Springel [volker.springel@h-its.org]). It has been updated
+%       with new naming conventions and additional variables as needed by 
+%       Phil Hopkins [phopkins@caltech.edu] for GIZMO.
+%-------------------------------------------------------------------------
+
+%----  Relevant files
+InitCondFile  ./ics_file  %/project/rrg-babul-ad/wcui/HYENAS/ICs/level1/halo_3224  %/scratch/b/babul/wcui/HYENAS/ICs/level1/halo_3224 %/home/b/babul/fjenning/scratch/xray_bubbles/ICs_level1/
+OutputDir     .  %/scratch/aspadawe/snapshots/HyenasC/L1/SimbaC_L1_Calibration/halo_3224_good-correct_jet-ascale
+
+%---- File formats 
+ICFormat    1  % 1=binary, 3=hdf5, 4=cluster 
+SnapFormat  3  % 1=binary, 3=hdf5 
+
+%---- Output parameters 
+RestartFile                 restart 
+SnapshotFileBase            snapshot 
+OutputListOn                1  % =1 to use list in "OutputListFilename" 
+OutputListFilename          ./param_files/output_last.txt  %/home/b/babul/fjenning/scratch/xray_bubbles/PAPER_2_SIMBA_C_RECAL/cheyenas_output_list.txt
+NumFilesPerSnapshot         1 
+NumFilesWrittenInParallel   16  % must be < N_processors & power of 2
+
+%---- Output frequency 
+TimeOfFirstSnapshot     0.1 
+TimeBetSnapshot         1.1 
+TimeBetStatistics       0.05 
+
+%---- CPU-time limits 
+TimeLimitCPU            900000  % in seconds 
+CpuTimeBetRestartFile   21600 	% in seconds 
+ResubmitOn              0 
+ResubmitCommand         my-scriptfile 
+
+%----- Memory alloction 
+MaxMemSize          3500    % sets maximum MPI process memory use in MByte 
+PartAllocFactor     3.0     % memory load allowed for better cpu balance 
+BufferSize          300     % in MByte 
+
+%---- Characteristics of run 
+TimeBegin   0.004   % Beginning of the simulation 
+TimeMax     1.0    % End of the simulation 
+
+%---- Cosmological parameters 
+ComovingIntegrationOn   1       % is it cosmological? (yes=1, no=0)
+BoxSize                 200000.  % in code units
+Omega0                  0.3    % =0 for non-cosmological
+OmegaLambda             0.7    % =0 for non-cosmological
+OmegaBaryon             0.048   % =0 for non-cosmological
+HubbleParam             0.68     % little 'h'; =1 for non-cosmological runs
+
+%---- Accuracy of time integration 
+MaxSizeTimestep         0.005   % in code units, set for your problem
+MinSizeTimestep         1.0e-12 % set this very low, or risk stability
+
+%---- Tree algorithm, force accuracy, domain update frequency 
+TreeDomainUpdateFrequency   0.005	% 0.0005-0.05, dept on core+particle number  
+
+%---- System of units 
+UnitLength_in_cm            3.085678e21     % 1.0 kpc/h
+UnitMass_in_g               1.989e43  	    % 1.0e10 solar masses/h
+UnitVelocity_in_cm_per_s    1.0e5   	    % 1 km/sec
+UnitMagneticField_in_gauss  1.0   	        % 1 gauss
+GravityConstantInternal     0		        % calculated by code if =0
+
+%---- Initial temperature & temperature floor 
+InitGasTemp     273	    % set by IC file if =0 
+MinGasTemp      10.	    % don't set <10 in explicit feedback runs, otherwise 0
+
+%---- Density/volume estimation (kernel) 
+DesNumNgb               64      % 32 for standard kernel, 60-114 for quintic 
+MaxHsml                 1.0e10  % some very large value (here to prevent errors)
+MinHsml                 0       % minimum gas kernel length  (=0, should be <=SofteningGasMaxPhys)
+MinGasHsmlFractional	0.5
+
+%---- Gravitational softening lengths 
+%----- Softening lengths per particle type. If ADAPTIVE_GRAVSOFT is set, these  
+%-------- are the minimum softening allowed for each type ------- 
+%-------- (units are co-moving for cosmological integrations)
+SofteningGas    0.25    % gas (type=0) (in units above, =1 pc softening)
+SofteningHalo   0.25    % dark matter/collisionless particles (type=1)
+SofteningDisk   0.25    % collisionless particles (type=2)
+SofteningBulge  0.25    % collisionless particles (type=3)
+SofteningStars  0.25    % stars spawned from gas (type=4)
+SofteningBndry  0.25    % black holes (if active), or collisionless (type=5)
+%---- if these are set in cosmo runs, SofteningX switches from comoving to physical
+%------- units when the comoving value exceeds the choice here
+SofteningGasMaxPhys     0.25    % switch to 0.5pc physical below z=1 
+SofteningHaloMaxPhys    0.25 
+SofteningDiskMaxPhys    0.25 
+SofteningBulgeMaxPhys   0.25 
+SofteningStarsMaxPhys   0.25 
+SofteningBndryMaxPhys   0.25 
+%----- parameters for adaptive gravitational softening 
+AGS_DesNumNgb           64  % neighbor number for calculating adaptive gravsoft
+
+
+
+
+%------------------------------------------------------------
+%---------- Physics Modules ---------------------------------
+%------------------------------------------------------------
+
+%---- Turbulent Diffusion Master Switch (TURB_DIFFUSION on) 
+%TurbDiffusionCoefficient    1.0    % Normalizes diffusion rates, should be ~1 
+%TurbDynamicDiffFac          2.0
+%TurbDynamicDiffIterations   0
+%TurbDynamicDiffSmoothing    0.8
+%TurbDynamicDiffMax          0.04
+%TimeBetDynDiff              0
+%TurbDynGradDiffMax          1.0
+
+%---- Star Formation parameters (GALSF on)
+CritPhysDensity     0.2    %  critical physical density for star formation (cm^(-3)) 
+SfEffPerFreeFall    0.026     %  SFR/(Mgas/tfreefall) for gas which meets SF criteria 
+
+
+%---- sub-grid (Springel+Hernquist/GADGET/AREPO) "effective equation of state" 
+%------- star formation+feedback model (GALSF_EFFECTIVE_EQS on)
+MaxSfrTimescale     2.8         % code units (SF timescale at 2-phase threshold)
+TempSupernova       4.87e7       % in Kelvin (temp of hot gas in 2-phase model)
+TempClouds          1000.0      % in Kelvin (temp of cold gas in 2-phase model)
+FactorSN            0.0         % SNe coupling frac (frac of egy retained in hot)
+FactorEVP           3000.0      % controls Kennicutt normalization 
+FactorForSofterEQS  1.0         % interpolate between 'stiff' and isothermal EOS
+%------- the sub-grid "decoupled winds" model (GALSF_SUBGRID_WINDS on)
+WindEfficiency          2.0     % mass-loading (Mdot_wind = SFR * WindEfficiency) 
+WindEnergyFraction      0.1    % fraction of SNe energy in winds (sets velocity) 
+WindFreeTravelMaxTime   0.02     % 'free-stream time' in units of t_Hubble(z)
+WindFreeTravelDensFac   0.01     % 'free-stream' until density < this * CritPhysDensity
+%------- variable winds (GALSF_SUBGRID_VARIABLEVELOCITY on)
+VariableWindVelFactor	2.50	% wind vel in multiple of vcirc
+VariableWindSpecMomentum  2.0	% fraction of SN momentum into wind
+
+
+%-------------- FIRE (PFH) explicit star formation & feedback model 
+%--- initial metallicity of gas & stars in simulation 
+InitMetallicity             0.0001  % initial gas+stellar metallicity (in solar)
+InitStellarAge              0.001   % initial mean age (in Gyr; for stars in sim ICs)
+%--- local radiation-pressure driven winds (GALSF_FB_RPWIND_LOCAL) 
+WindMomentumLoading         1.0     % fraction of photon momentum to couple
+%--- SneII Heating Model (GALSF_FB_SNE_HEATING) 
+SNeIIEnergyFrac             1.0     % fraction of mechanical energy to couple
+%--- HII region photo-heating model (GALSF_FB_HII_HEATING)  
+HIIRegion_fLum_Coupled      1.0     % fraction of ionizing photons allowed to see gas
+%--- long-range radiation pressure acceleration (GALSF_FB_RT_PHOTONMOMENTUM) 
+PhotonMomentum_Coupled_Fraction  1.0  % fraction of L to allow incident
+PhotonMomentum_fUV          0.0    % incident SED f(L) in UV (minimum scattering)
+PhotonMomentum_fOPT         0.0    % incident SED f(L) in optical/near-IR 
+%--- gas return/recycling (GALSF_FB_GASRETURN) 
+GasReturnFraction           1.0     % fraction of gas mass returned (relative to ssp)
+GasReturnEnergy             1.0     % fraction of returned gas energy+momentum (relative to ssp)
+
+%-------------- Black Hole accretion & formation (BLACK_HOLES on)
+%--- formation/seeding  
+TimeBetOnTheFlyFoF           1.1            % time (in sec) between FoF searches --> DAA: this is t
+%he factor by which ascale increases until next FoF in cosmological integrations
+SeedBlackHoleMass            1.0e-7     % initial mass (on-the-fly or single galaxy) 
+SeedBlackHoleMassSigma       0
+MinFoFMassForNewSeed         100      % log(M_stars) for on-the-fly FoF seeding --> DAA: this is not log(M_stars)! this is total Halo mass in code units (ignored if BH_HOST_TO_SEED_RATIO)
+massDMpart                   0.0126849      % DAA: used by FoF (ignored if BH_HOST_TO_SEED_RATIO)
+%--- accretion
+BlackHoleAccretionFactor     1.0            % multiplier for mdot
+BlackHoleEddingtonFactor     3.0           % fraction of eddington to cap (can be >1)
+BlackHoleNgbFactor           4              % multiplier for kernel neighbors for BH
+BlackHoleMaxAccretionRadius  2              % max radius for BH neighbor search/accretion
+BlackHoleRadiativeEfficiency 0.1        % radiative efficiency
+%--- feedback
+BlackHoleFeedbackFactor      1.0	    % generic feedback strength multiplier 
+BH_FluxMomentumFactor        1.0	    % multiply radiation pressure (BH_PHOTONMOMENTUM) 
+BAL_f_accretion              0.22        % fraction of gas swallowed by BH (BH_BAL_WINDS) 
+BAL_v_outflow                0.0	    % velocity (km/s) of BAL outflow (BH_BAL_WINDS) 
+SeedBlackHoleMinRedshift     0 
+SeedBlackHoleMassSigma       0
+
+EddingtonRatioForJet         0.2	% APB: Jet mode starts if(eddington_ratio < EddingtonRatioForJet); fiducial value of 0.2 for Simba and Simba-C
+BlackHoleMassForMinJet       7.e7       % APB: Minimum BH mass for Simba AGN jets to activate, requires BH_QUENCH_JET (for OG Simba: 4.e7, for Simba-C: 7.e7)
+BlackHoleMassForFullJet      1.e8       % APB: BH mass by which Simba AGN jets are fully activated, requires BH_QUENCH_JET (for OG Simba: 6.e7, for Simba-C: 1.e8)
+BlackHoleDecoupleTime        1.e-4      % APB: Decoupling time as fraction of Hubble time at redshfit z for BH winds/jets
+BlackHoleJetVelocity         10000	% APB: Velocity of AGN jet (really factor that goes into scaling the jet velocity)
+%BlackHoleXrayActivateVelocity		% APB: Wind/jet velocity at which AGN X-ray feedback activates (hard-coded to be 1 km/s less than BlackHoleJetVelocity)
+
+%-------------- Grackle UVB file (GRACKLE on)
+GrackleDataFile		    ./param_files/grackle_data_files/CloudyData_UVB=HM2012_shielded.h5 %CloudyData_UVB=HM2012_shielded.h5
